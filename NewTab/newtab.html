@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>New Tab</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="page-content">
+        <div class="background-box">
+            <div class="background fadein" id="background">
+            </div>
+            <img class="background-image" id="background-image" src=""></img>
+            <div class="background-shadow">
+            </div>
+        </div>
+        <div class="app-contents">
+            <div class="absolute-top">
+                <div class="weather-box">
+                </div>
+                <div class="search-box">
+                    <div class="link-box">
+                        <div class="link" id="link">Links</div>
+                        <div class="link-tabs">
+                            <div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="search" class="search flex-center">
+                        <div class="search-icon"></div>
+                        <div class="line"></div>
+                        <input class="search-input" id="search-input">
+                        <ul class="content-list hidden"></ul>
+                        <div class="hide-content opacity-hide flex-center">
+                            <div class="search-btn-box">
+                                <button class="search-btn btn">搜索</button>
+                            </div>
+                            <div class="choose-engine-box flex-center">
+                                <div class="search-engine"></div>
+                                <div class="arrow-down"></div>
+                            </div>
+                        </div>
+                        <div class="choose-search-engine hidden">
+                            <div class="choose-text">选择搜索引擎</div>
+                            <ul class="engine-list">
+                                <li class="item" data-value="01" data-name="baidu">
+                                    <div class="engine-image baidu"></div>
+                                    <div class="engine-name">BaiDu</div>
+                                </li>
+                                <li class="item" data-value="02" data-name="google">
+                                    <div class="engine-image google"></div>
+                                    <div class="engine-name">Google</div>
+                                </li>
+                                <li class="item hidden" data-value="03" data-name="sogou">
+                                    <div class="engine-image sogou"></div>
+                                    <div class="engine-name">Sogou</div>
+                                </li>
+                                <li class="item hidden" data-value="04" data-name="sanliu0">
+                                    <div class="engine-image sanliu0"></div>
+                                    <div class="engine-name">360</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clock-box absolute-center">
+                <div class="clock-inner">
+                    <div class="clock-time" id="time"></div>
+                    <span class="morning-afternoon hidden" id="am-pm"></span>
+                    <div class="clock-day" id="date"></div>
+                </div>
+            </div>
+            <div class="footer absolute-bottom">
+                <div class="setting">
+                    <div class="setting-btn"></div>
+                </div>
+                <div class="bottom center poetry-content">
+                    <div class="transition-content">
+                        <div class="content-box">
+                            <div id="content" class="content"></div>
+                        </div>
+                        <div class="author">
+                            <div id="poetry-name" class="poetry-name"></div>
+                            <div class="search-btn"></div>
+                            <div class="arrow-top"></div>
+                        </div>
+                    </div>
+                    <div class="poetry-whole hidden">
+                        <div class="poetry-info">
+                            <div class="poetry-whole-title"></div>
+                            <span class="poetry-whole-dynasty"></span>
+                        </div>
+                        <ul class="poetry-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fixed-left">
+        <div class="setting-title">设置
+            <div class="setting-back"></div>
+        </div>
+        <div class="setting-list">
+            <div class="setting-item select-radom">
+                <label class="radio-item">
+                    <input type="radio" name="randomBg" value="true"><span>随机图片</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="randomBg" value="false"><span>自定义图片</span>
+                </label>
+            </div>
+            <div class="setting-item select-background hidden">
+                <input class="choose-image" type="file" accept="image/*" />
+            </div>
+            <div class="setting-item select-time-format">
+                <label class="radio-item">
+                    <input type="radio" name="timeFormat" value="24"><span>24小时</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="timeFormat" value="12"><span>12小时</span>
+                </label>
+            </div>
+            <div class="setting-item select-weather hidden">
+                <label class="radio-item">
+                    <input type="radio" name="weather" value="true"><span>展示天气</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="weather" value="false"><span>隐藏天气</span>
+                </label>
+            </div>
+            <div class="setting-item select-search">
+                <label class="radio-item">
+                    <input type="radio" name="search" value="true"><span>展示搜索</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="search" value="false"><span>隐藏搜索</span>
+                </label>
+            </div>
+            <div class="setting-item select-poetry">
+                <label class="radio-item">
+                    <input type="radio" name="oneMsg" value="true"><span>展示古诗</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="oneMsg" value="false"><span>隐藏古诗</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/search.js"></script>
+<script src="js/test.js"></script>
+
+</html>

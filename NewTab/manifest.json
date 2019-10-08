@@ -1,0 +1,36 @@
+{
+    "manifest_version": 2,
+    "name": "demo",
+    "version": "1.0.0",
+    "description": "demo测试",
+    "icons":
+    {
+        "16": "./img/present.png",
+        "48": "./img/present.png",
+        "128": "./img/present.png"
+    },
+    "permissions": [
+        "storage",
+        "https://cn.bing.com/*",
+        "https://www.baidu.com/*",
+        "https://www.sogou.com/suggnew/*",
+        "https://www.google.com/*",
+        "https://v2.jinrishici.com/*"
+    ],
+    "background":
+    {
+        "persistent": true,
+        "scripts": [ "js/jquery-3.3.1.min.js","js/test.js","js/search.js"]
+    },
+    "homepage_url": "https://www.baidu.com",
+    "browser_action":
+    {
+        "default_title": "这是一个示例Chrome插件",
+        "default_popup": "popup.html"
+    },
+    "chrome_url_overrides":
+    {
+        "newtab": "newtab.html"
+    }
+    
+}

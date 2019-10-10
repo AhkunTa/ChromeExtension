@@ -5,7 +5,7 @@ chrome.contextMenus.create({
     // onclick: function() {
     //     chrome.tabs.create({url:'chrome://newtab'})
     // }
-    // documentUrlPatterns: ['http://*/*', 'https://*/*', 'file:///*', 'about:blank']
+    documentUrlPatterns: ['http://*/*', 'https://*/*', 'file:///*', 'about:blank']
 });
 
 chrome.contextMenus.onClicked.addListener(onContextMenusClicked);

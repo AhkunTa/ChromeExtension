@@ -58,6 +58,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
+    opacity: 0;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -138,8 +139,7 @@ body {
 }
 
 .poetry-content {
-    width: 50%;
-    bottom: 0px;
+    bottom: 0;
     font-size: 20px;
     color: #ffffffe6;
 }

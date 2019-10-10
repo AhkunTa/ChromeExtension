@@ -5,9 +5,9 @@
     "description": "以一个个性化页面，替换原有chrome新建空白页",
     "icons":
     {
-        "16": "./img/present.png",
-        "48": "./img/present.png",
-        "128": "./img/present.png"
+        "16": "./img/new-tab.png",
+        "48": "./img/new-tab.png",
+        "128": "./img/new-tab.png"
     },
     "permissions": [
         "storage",

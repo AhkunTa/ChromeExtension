@@ -96,7 +96,6 @@ $("#search-input").on('keyup', function(event) {
         dataType: ajaxDataType(indexValue),
         data: ajaxJsonp(indexValue),
         success: function(data) {
-            console.log(data)
             let str = '',
                 array;
             if (indexValue === '01') {

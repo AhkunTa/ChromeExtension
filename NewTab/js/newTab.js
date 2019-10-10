@@ -10,10 +10,11 @@ let clock = {
 }
 let settings = {
     setRandomBg: true,
-    set12Hours: false,
+    setHours: false,
     setWeather: true,
     setSearch: true,
     setOneMsg: true,
+    setTime: true,
     oneMsgToken: ''
 }
 
@@ -22,9 +23,16 @@ config()
 
 
 function config() {
-    chrome.storage.local.get({ bgImg: '', randomBg: 'true', timeFormat: '24', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
+    $('.background-image').each(function() {
+        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+            $('.background-image').hide();
+        }
+    })
+
+    chrome.storage.local.get({ bgImg: '', randomBg: 'true', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
         let items = $('.setting-list .setting-item');
-        settings.set12Hours = config.timeFormat === '12';
+        settings.setHours = config.timeFormat === '12';
+        settings.setTime = config.time === 'true';
         settings.setRandomBg = config.randomBg === 'true';
         settings.setWeather = config.weather === 'true';
         settings.setSearch = config.search === 'true';
@@ -32,15 +40,12 @@ function config() {
         settings.oneMsgToken = config.oneMsgToken;
 
         if (!settings.setRandomBg && config.bgImg !== '') {
-            updateTime(settings.set12Hours);
+            updateTime(settings.setHours);
             $('#background-image').attr({ 'src': config.bgImg })
-            $('#background-image').show();
+            $('#background-image').fadeIn();
             $('.select-background').show();
-            // backgroundLoaded($('#background-image'),false,function() {
-            //     $('#background-image').show();
-            // })
         } else {
-            updateTime(settings.set12Hours);
+            updateTime(settings.setHours);
             updateBg();
         }
         if (settings.setOneMsg) {
@@ -53,8 +58,17 @@ function config() {
         } else {
             $('.search-box').hide();
         }
+        if (settings.setTime) {
+            $('.select-time-format').show();
+            $('.clock-inner').show();
+        } else {
+            $('.clock-inner').hide();
+            $('.select-time-format').hide();
+
+        }
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);
         items.find('[name=timeFormat][value="' + config.timeFormat + '"]').attr('checked', true);
+        items.find('[name=time][value="' + config.time + '"]').attr('checked', true);
         // items.find('[name=weather][value="' + config.weather + '"]').attr('checked', true);
         items.find('[name=search][value="' + config.search + '"]').attr('checked', true);
         items.find('[name=oneMsg][value="' + config.oneMsg + '"]').attr('checked', true);
@@ -77,9 +91,9 @@ function updateOneMsg() {
             let origin = data.data.origin;
             let str = '';
             $('#content').text(content)
-            $('#poetry-name').text(origin.title + '—' + origin.author)
+            $('#poetry-name').text(origin.title + ' — ' + origin.author)
             $('.poetry-whole-title').text(origin.title)
-            $('.poetry-whole-dynasty').text(origin.dynasty + '—' + origin.author)
+            $('.poetry-whole-dynasty').text(origin.dynasty + ' — ' + origin.author)
             for (var i = 0; i < origin.content.length; i++) {
                 str = str + `<li class="item">${origin.content[i]}</li>`;
             }
@@ -100,7 +114,7 @@ function updateOneMsg() {
 }
 
 function updateBg() {
-    $('#background-image').hide();
+    $('#background').css({ 'opacity': '0' })
     $.ajax({
         type: 'get',
         url: bingUrl,
@@ -111,12 +125,13 @@ function updateBg() {
             let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
             $('#background').css({ 'background-image': bgUrl })
             backgroundLoaded($('#background'), true, function() {
+                $('#background-image').hide();
                 $('#background').css({ 'opacity': '1' })
             })
         },
         error: function(data) {
             var radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
-            $('#background').css({ 'background': radomColor })
+            $('#background').css({ 'background': radomColor, 'opacity': '1' })
             console.log(data.code || data.msg || '出错了！')
         }
     })
@@ -129,7 +144,6 @@ function backgroundLoaded(backgroundImageEle, isbackground, callback) {
         imgUrl = background.match(/url\("(\S*)"\)/)[1];
     } else {
         imgUrl = backgroundImageEle.attr('src');
-        console.log(imgUrl)
     }
     var img = new Image();
     img.src = imgUrl;
@@ -252,6 +266,7 @@ $('.search-input').on('focus blur', function() {
     $('.hide-content').toggleClass('opacity-hide');
 })
 
+
 // $('.search-input').on('focus',function(e){
 //     e.stopPropagation();
 //     e.preventDefault();
@@ -285,11 +300,23 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('timeformat保存成功！', value);
             });
             if (value === '12') {
-                settings.set12Hours = true
+                settings.setHours = true
                 updateTime(true)
             } else if (value === '24') {
-                settings.set12Hours = false
+                settings.setHours = false
                 updateTime(false)
+            }
+            break;
+        case 'time':
+            chrome.storage.local.set({ time: value }, function() {
+                console.log('time保存成功！', value);
+            });
+            if (value === 'true') {
+                $('.clock-inner').fadeIn();
+                $('.select-time-format').show();
+            } else if (value === 'false') {
+                $('.clock-inner').fadeOut();
+                $('.select-time-format').hide();
             }
             break;
         case 'weather':

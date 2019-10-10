@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "demo",
+    "name": "NewTab",
     "version": "1.0.0",
-    "description": "demo测试",
+    "description": "以一个个性化页面，替换原有chrome新建空白页",
     "icons":
     {
         "16": "./img/present.png",
@@ -15,22 +15,23 @@
         "https://www.baidu.com/*",
         "https://www.sogou.com/suggnew/*",
         "https://www.google.com/*",
-        "https://v2.jinrishici.com/*"
+        "https://v2.jinrishici.com/*",
+        "contextMenus",
+        "tabs"
     ],
     "background":
     {
-        "persistent": true,
-        "scripts": [ "js/jquery-3.3.1.min.js","js/test.js","js/search.js"]
+        "persistent": false,
+        "scripts": ["js/background.js"]
     },
-    "homepage_url": "https://www.baidu.com",
+    "homepage_url": "https://github.com/AhkunTa/ChromeExtension/tree/master/NewTab",
     "browser_action":
     {
-        "default_title": "这是一个示例Chrome插件",
-        "default_popup": "popup.html"
+        "default_title": "NewTab"
     },
     "chrome_url_overrides":
     {
         "newtab": "newtab.html"
     }
-    
+
 }

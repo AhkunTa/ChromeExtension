@@ -8,7 +8,6 @@ let clock = {
     date: '',
     am_pm: ''
 }
-let ramdomBg;
 let settings = {
     setRandomBg: true,
     set12Hours: false,
@@ -78,9 +77,9 @@ function updateOneMsg() {
             let origin = data.data.origin;
             let str = '';
             $('#content').text(content)
-            $('#poetry-name').text(origin.title+'—'+ origin.author)
+            $('#poetry-name').text(origin.title + '—' + origin.author)
             $('.poetry-whole-title').text(origin.title)
-            $('.poetry-whole-dynasty').text(origin.dynasty+'—'+ origin.author)
+            $('.poetry-whole-dynasty').text(origin.dynasty + '—' + origin.author)
             for (var i = 0; i < origin.content.length; i++) {
                 str = str + `<li class="item">${origin.content[i]}</li>`;
             }
@@ -155,8 +154,7 @@ function updateWeather() {
         success: function(data) {
             console.log(data)
         },
-        error: function(data) {
-        }
+        error: function(data) {}
     })
 }
 
@@ -240,7 +238,7 @@ $('.app-contents,.setting-back').on('click', function() {
     }
 })
 
-$('.poetry-content').on('click',function() {
+$('.poetry-content').on('click', function() {
     $('.poetry-whole').toggleClass('hidden');
 })
 

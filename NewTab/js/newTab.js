@@ -23,11 +23,11 @@ config()
 
 
 function config() {
-    $('.background-image').each(function() {
-        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-            $('.background-image').hide();
-        }
-    })
+    // $('.background-image').each(function() {
+    //     if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+    //         $('.background-image').hide();
+    //     }
+    // })
 
     chrome.storage.local.get({ bgImg: '', randomBg: 'true', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
         let items = $('.setting-list .setting-item');
@@ -94,7 +94,7 @@ function updateOneMsg() {
             $('#poetry-name').text(origin.title + ' — ' + origin.author)
             $('.poetry-whole-title').text(origin.title)
             $('.poetry-whole-dynasty').text(origin.dynasty + ' — ' + origin.author)
-            for (var i = 0; i < origin.content.length; i++) {
+            for (let i = 0; i < origin.content.length; i++) {
                 str = str + `<li class="item">${origin.content[i]}</li>`;
             }
             $('.poetry-list').html(str);
@@ -121,7 +121,7 @@ function updateBg() {
         data: {},
         dataType: 'json',
         success: function(data) {
-            var randomBgIndex = Math.ceil(Math.random() * data.images.length);
+            let randomBgIndex = Math.ceil(Math.random() * data.images.length);
             let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
             $('#background').css({ 'background-image': bgUrl })
             backgroundLoaded($('#background'), true, function() {
@@ -130,7 +130,7 @@ function updateBg() {
             })
         },
         error: function(data) {
-            var radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
+            let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
             $('#background').css({ 'background': radomColor, 'opacity': '1' })
             console.log(data.code || data.msg || '出错了！')
         }
@@ -138,16 +138,16 @@ function updateBg() {
 }
 
 function backgroundLoaded(backgroundImageEle, isbackground, callback) {
-    var background, imgUrl;
+    let background, imgUrl;
     if (isbackground) {
         background = backgroundImageEle.css("background-image");
         imgUrl = background.match(/url\("(\S*)"\)/)[1];
     } else {
         imgUrl = backgroundImageEle.attr('src');
     }
-    var img = new Image();
+    let img = new Image();
     img.src = imgUrl;
-    var timer = setInterval(function() {
+    let timer = setInterval(function() {
         if (img.complete) {
             clearInterval(timer)
             callback()
@@ -214,7 +214,7 @@ function getLangDate(twelveHour) {
 }
 
 function chooseImage(fileDOM) {
-    var file = fileDOM.files[0], // 获取文件
+    let file = fileDOM.files[0], // 获取文件
         imageType = /^image\//,
         reader = '';
     if (file && !imageType.test(file.type)) {
@@ -274,7 +274,7 @@ $('.search-input').on('focus blur', function() {
 //     $('.hide-content').addClass('opacity-hide');
 // })
 
-$(document).on('change', '.setting-list .setting-item input[type="radio"]', function(e) {
+$(document).on('change', '.setting-item input[type="radio"]', function(e) {
     let $radio = $(this);
     let $radioName = $radio.attr('name')
     let $radioList = $radio.closest('.setting-item');

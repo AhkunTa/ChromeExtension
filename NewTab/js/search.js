@@ -1,24 +1,26 @@
 let url = {
     link: {
         baidu: 'https://www.baidu.com/s?wd=',
-        sogou: 'https://www.sogou.com/web?query=1',
+        sogou: 'https://www.sogou.com/web?query=',
         google: 'https://google.com/search?q=',
         sanliu0: 'https://www.so.com/s?q=',
+        doge: 'https://www.dogedoge.com/results?q=',
+        duck: 'https://duckduckgo.com/?q='
     },
     jsonPLink: {
         baidu: 'https://www.baidu.com/sugrec?prod=pc',
-        sogou: 'https://www.sogou.com/suggnew/ajajjson',
+        sogou: 'https://www.sogou.com/suggnew/ajajjson?type=web',
         google: 'https://www.google.com/complete/search?cp=2&client=psy-ab&hl=zh-CN',
-        sanliu0: 'https://sug.so.360.cn/suggest',
+        sanliu0: 'https://sug.so.360.cn/suggest?encodein=utf-8&encodeout=utf-8&format=json',
+        doge: 'https://www.dogedoge.com/sugg/',
+        duck: 'https://duckduckgo.com/ac/?kl=wt-wt&_=1570767110286'
     }
 }
 
 let indexValue = '01';
 //默认为百度地址
-let jsonPURL = 'https://www.baidu.com/sugrec?prod=pc';
-// let jsonPURL = 'https://www.sogou.com/suggnew/ajajjson?type=web';
-// https://www.google.com/complete/search?q=11&cp=2&client=psy-ab&xssi=t&gs_ri=gws-wiz&hl=zh-CN&authuser=0&pq=1&psi=x5WMXf3hIpf7wAO-7aDYDQ.1569494472486&ei=x5WMXf3hIpf7wAO-7aDYDQ
-let normalUrl = 'https://www.baidu.com/s?wd=';
+let jsonPURL = url.jsonPLink.baidu;
+let normalUrl = url.link.baidu;
 
 let chooseItem = 0;
 let isfirst = 1;
@@ -32,6 +34,18 @@ chrome.storage.local.get({ indexValue: '01', searchEngineName: 'baidu' }, functi
 });
 
 jumpToPage();
+
+// window.sogou = {
+//     sug: function(json) {
+//         console.log(json)
+//         let array = json[1];
+//         for (let i = 0; i < array.length; i++) {
+//             var str = str + `<li class="item">${array[i]}</li>`;
+//         }
+//         $('.content-list').html(str);
+//     }
+// }
+
 
 // 按键按下 上下滑动选择事件
 $('#search-input').on('keydown', function(event) {
@@ -69,10 +83,8 @@ $('#search-input').on('keydown', function(event) {
             chooseItem = 0;
         }
         addBgcolor(chooseItem);
-
     }
 })
-
 
 // $("#search-input").on('focus blur', function(event) {
 //     $('.content-list').toggleClass('hidden')
@@ -80,7 +92,6 @@ $('#search-input').on('keydown', function(event) {
 $("#search-input").on('focus', function(event) {
     $('.content-list').removeClass('hidden')
 })
-
 
 $("#search-input").on('keyup', function(event) {
     word = $('#search-input').val();
@@ -90,9 +101,12 @@ $("#search-input").on('keyup', function(event) {
     } else if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39) {
         return
     }
+    if (indexValue === '05') {
+        jsonPURL = jsonPURL + word
+    }
     $.ajax({
         url: jsonPURL,
-        type: "get",
+        type: 'get',
         dataType: ajaxDataType(indexValue),
         data: ajaxJsonp(indexValue),
         success: function(data) {
@@ -100,7 +114,7 @@ $("#search-input").on('keyup', function(event) {
                 array;
             if (indexValue === '01') {
                 // baidu
-                let array = data.g
+                array = data.g
                 if (array) {
                     for (let i = 0; i < array.length; i++) {
                         str = str + `<li class="item">${array[i].q}</li>`;
@@ -108,7 +122,6 @@ $("#search-input").on('keyup', function(event) {
                 }
             } else if (indexValue === '02') {
                 // google
-                /* google传参不同 导致返回数据格式不同 ！！！ */
                 // let reg = /^\)\]\}'{1}/i;
                 // let newData = data.replace(reg,'').trim()
                 // newData = newData.split('],{')[0].replace(/^\[\[/i,'').replace(/(".+")/g, "$1 ")
@@ -116,29 +129,71 @@ $("#search-input").on('keyup', function(event) {
                 // console.log(newData)
                 // newData = newData.replace(/\],\[/mg,']||[').split('||')
 
-                let array = data[1];
+                array = data[1];
                 if (array) {
                     for (let i = 0; i < array.length; i++) {
                         str = str + `<li class="item">${array[i][0]}</li>`;
                     }
                 }
             } else if (indexValue === '03') {
-
+                // sogou
+                let newData = data.replace(/(\[.*?\])/g, '$1(╰_╯)')
+                array = newData.split('(╰_╯)')[0].replace(/window\.sogou\.sug\(\[/g, '').replace(/^".*?",/g,'"sogou":')
+                let jsonSogou = JSON.parse('{'+array+'}')
+                if(jsonSogou) {
+                    for (let i = 0; i < jsonSogou.sogou.length; i++) {
+                        str = str + `<li class="item">${jsonSogou.sogou[i]}</li>`;
+                    }
+                }
+            } else if (indexValue === '04') {
+                // 360
+                array = data.result;
+                let arrayLength = array.length
+                if (array) {
+                    arrayLength = arrayLength >= 10 ? 10 : arrayLength
+                    for (let i = 0; i < arrayLength; i++) {
+                        str = str + `<li class="item">${array[i].word}</li>`;
+                    }
+                }
+            } else if (indexValue === '05') {
+                // doge
+                let newData = data.replace(/<\/div>/g, 'O(∩_∩)O').replace(/<.*?>/g, '')
+                array = newData.split('O(∩_∩)O')
+                array.pop();
+                if (array) {
+                    for (let i = 0; i < array.length; i++) {
+                        str = str + `<li class="item">${array[i]}</li>`;
+                    }
+                }
+            } else if (indexValue === '06') {
+                // duck
+                array = data;
+                let arrayLength = array.length
+                if (array) {
+                    arrayLength = arrayLength >= 10 ? 10 : arrayLength
+                    for (let i = 0; i < arrayLength; i++) {
+                        str = str + `<li class="item">${array[i].phrase}</li>`;
+                    }
+                }
             }
             $('.content-list').html(str);
         },
         error: function(data, textStatus, errThrown) {
-            console.log('错误', data, textStatus, errThrown)
+            if (indexValue === '02' || indexValue === '06') {
+                console.log('访问google和duckduckgo需自带梯子')
+            }
+            console.log(data, textStatus, errThrown)
         }
     });
 })
 
+
 $('.content-list').on('mouseover', '.item', function() {
-    $('.item').removeClass('choose-bg-color');
+    $(this).removeClass('choose-bg-color');
     $(this).addClass('choose-bg-color')
 })
 $('.content-list').on('mouseout', '.item', function() {
-    $('.item').removeClass('choose-bg-color');
+    $(this).removeClass('choose-bg-color');
 })
 
 $('.choose-engine-box').on('click', function() {
@@ -191,11 +246,16 @@ function ajaxDataType(searchEngineIndex) {
             return 'json';
         case '03':
             // sogou
-            return data;
+            return '';
         case '04':
             // 360
-            data.key = word;
-            return data;
+            return 'json';
+        case '05':
+            // doge
+            return 'text';
+        case '06':
+            // duck
+            return 'json';
         default:
             return 'json';
     }
@@ -204,7 +264,7 @@ function ajaxDataType(searchEngineIndex) {
 
 function ajaxJsonp(searchEngineIndex) {
     word = $('#search-input').val();
-    var data = {}
+    let data = {}
     switch (searchEngineIndex) {
         case '01':
             // baidu
@@ -216,11 +276,18 @@ function ajaxJsonp(searchEngineIndex) {
             return data;
         case '03':
             // sogou
-            data.wd = word;
+            data.key = word;
             return data;
         case '04':
             // 360
-            data.key = word;
+            data.word = word;
+            return data;
+        case '05':
+            // doge
+            return data;
+        case '06':
+            // duck
+            data.q = word;
             return data;
         default:
             data.wd = word;

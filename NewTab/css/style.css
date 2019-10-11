@@ -283,9 +283,10 @@ body {
 }
 
 .content-list {
+    background-color: #0f0f0f4a;
     position: absolute;
     top: 48px;
-    max-width: 357px;
+    width: 357px;
 }
 
 .hide-content {
@@ -350,7 +351,7 @@ body {
     position: absolute;
     right: 0;
     top: 48px;
-    width: 120px;
+    width: 150px;
     background-color: #0f0f0fcc;
     min-height: 100px;
     font-size: 16px;
@@ -402,6 +403,12 @@ body {
 
 .sanliu0 {
     background-image: url(../img/sanliu0.png);
+}
+.doge {
+    background-image: url(../img/doge.png);    
+}
+.duck {
+    background-image: url(../img/duck.png);    
 }
 
 

@@ -8,9 +8,11 @@ chrome.contextMenus.create({
     documentUrlPatterns: ['http://*/*', 'https://*/*', 'file:///*', 'about:blank']
 });
 
-chrome.contextMenus.onClicked.addListener(onContextMenusClicked);
+chrome.contextMenus.onClicked.addListener(openNewTab);
 
 
-function onContextMenusClicked(obj) {
+function openNewTab() {
     chrome.tabs.create({ url: 'chrome://newtab' })
 }
+
+chrome.browserAction.onClicked.addListener(openNewTab);

@@ -86,9 +86,7 @@ $('#search-input').on('keydown', function(event) {
     }
 })
 
-// $("#search-input").on('focus blur', function(event) {
-//     $('.content-list').toggleClass('hidden')
-// })
+
 $("#search-input").on('focus', function(event) {
     $('.content-list').removeClass('hidden')
 })

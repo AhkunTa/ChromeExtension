@@ -30,7 +30,7 @@
     "homepage_url": "https://github.com/AhkunTa/ChromeExtension/tree/master/NewTab",
     "browser_action":
     {
-        "default_title": "NewTab"
+        "default_title": "NewTab(Github)"
     },
     "chrome_url_overrides":
     {

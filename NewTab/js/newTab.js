@@ -1,5 +1,6 @@
 // 背景图来自必应背景api接口
 let bingUrl = `https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=10&nc=1501558320736&pid=hp`
+// 天气接口暂未实现
 let weatherUrl = `https://www.tianqiapi.com/api/?version=v1&&appid=1001&appsecret=5566`
 // 今日诗词
 let oneUrl = `https://v2.jinrishici.com/one.json`
@@ -23,11 +24,6 @@ config()
 
 
 function config() {
-    // $('.background-image').each(function() {
-    //     if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-    //         $('.background-image').hide();
-    //     }
-    // })
 
     chrome.storage.local.get({ bgImg: '', randomBg: 'true', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
         let items = $('.setting-list .setting-item');

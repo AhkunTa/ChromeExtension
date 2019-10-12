@@ -19,6 +19,7 @@ let settings = {
     oneMsgToken: ''
 }
 
+let updateTimeInterval;
 config()
 // updateWeather()
 
@@ -36,12 +37,10 @@ function config() {
         settings.oneMsgToken = config.oneMsgToken;
 
         if (!settings.setRandomBg && config.bgImg !== '') {
-            updateTime(settings.setHours);
             $('#background-image').attr({ 'src': config.bgImg })
             $('#background-image').fadeIn();
             $('.select-background').show();
         } else {
-            updateTime(settings.setHours);
             updateBg();
         }
         if (settings.setOneMsg) {
@@ -55,12 +54,12 @@ function config() {
             $('.search-box').hide();
         }
         if (settings.setTime) {
+            updateTime(settings.setHours)
             $('.select-time-format').show();
             $('.clock-inner').show();
         } else {
             $('.clock-inner').hide();
             $('.select-time-format').hide();
-
         }
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);
         items.find('[name=timeFormat][value="' + config.timeFormat + '"]').attr('checked', true);
@@ -175,7 +174,7 @@ function updateTime(twelveHour) {
         $('#am-pm').hide();
     }
     getLangDate(twelveHour)
-    setInterval(function() {
+    updateTimeInterval = setInterval(function() {
         getLangDate(twelveHour)
     }, 60000)
 }
@@ -308,9 +307,11 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('time保存成功！', value);
             });
             if (value === 'true') {
+                updateTime(settings.setHours);
                 $('.clock-inner').fadeIn();
                 $('.select-time-format').show();
             } else if (value === 'false') {
+                clearInterval(updateTimeInterval);
                 $('.clock-inner').fadeOut();
                 $('.select-time-format').hide();
             }

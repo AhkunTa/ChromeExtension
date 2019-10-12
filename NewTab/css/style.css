@@ -175,15 +175,27 @@ body {
 .author div {
     display: inline-block;
 }
+
 .poetry-whole {
-	padding: 5px;
-	position: absolute;
+    padding: 5px;
+    position: absolute;
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #0f0f0fcc;
     font-size: 16px;
     border-radius: 5px;
+}
+
+.poetry-list {
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+
+.poetry-list::-webkit-scrollbar {
+    width: 0;
 }
 
 /* absolute-bottom */
@@ -404,11 +416,13 @@ body {
 .sanliu0 {
     background-image: url(../img/sanliu0.png);
 }
+
 .doge {
-    background-image: url(../img/doge.png);    
+    background-image: url(../img/doge.png);
 }
+
 .duck {
-    background-image: url(../img/duck.png);    
+    background-image: url(../img/duck.png);
 }
 
 

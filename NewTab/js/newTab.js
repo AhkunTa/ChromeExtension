@@ -142,7 +142,15 @@ function updateBg(url) {
             }else {
                 // 二百张图片随机获取
                 let randomBgIndex = Math.ceil(Math.random() * 10);
+                // 修改图片质量
+                
+                // 常规 0-1 M
                 let bgUrl = data.results[randomBgIndex-1].urls.regular;
+
+                // 全屏 2~5M
+                // let bgUrl = data.results[randomBgIndex].urls.full;
+
+                // 原生 10+M
                 // let bgUrl = data.results[randomBgIndex].urls.raw;
 
                 $('#background').css({ 'background-image': 'url('+ bgUrl +')'})

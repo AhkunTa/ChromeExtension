@@ -122,6 +122,15 @@
                     <input type="radio" name="randomBg" value="false"><span>自定义图片</span>
                 </label>
             </div>
+            <div class="setting-item select-background-url">
+                <label class="radio-item">
+                    <input type="radio" name="backgroundUrl" value="unsplash"><span>unsplash</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="backgroundUrl" value="bing"><span>必应</span>
+                </label>
+                <div class="refresh refresh-background" id="refresh-background"></div>
+            </div>
             <div class="setting-item select-background hidden">
                 <input class="choose-image" type="file" accept="image/*" />
             </div>
@@ -164,6 +173,7 @@
                 <label class="radio-item">
                     <input type="radio" name="oneMsg" value="false"><span>隐藏古诗</span>
                 </label>
+                <div class="refresh refresh-poetry" id="refresh-poetry"></div>
             </div>
         </div>
     </div>

@@ -466,6 +466,7 @@ body {
 }
 
 .setting-item {
+    position: relative;
     height: 50px;
     line-height: 50px;
 }
@@ -477,6 +478,16 @@ body {
 .move-active {
     opacity: 1;
     left: 0;
+}
+.refresh {
+    cursor: pointer;
+    position: absolute;
+    top: 13px;
+    right: 20px;
+    height: 24px;
+    width: 24px;
+    background: url(../img/refresh.png) no-repeat;
+    background-size: 100% 100%;
 }
 
 

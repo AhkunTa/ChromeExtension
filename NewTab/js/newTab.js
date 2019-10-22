@@ -1,9 +1,12 @@
 // 背景图来自必应背景api接口
-let bingUrl = `https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=10&nc=1501558320736&pid=hp`
+let bingUrl = `https://cn.bing.com/HPImageArchive.aspx?format=js&n=10`;
+// 背景图片接口来自https://unsplash.com
+let unsplashUrl = `https://unsplash.com/napi/search/photos?query=desktop%20background`
 // 天气接口暂未实现
 let weatherUrl = `https://www.tianqiapi.com/api/?version=v1&&appid=1001&appsecret=5566`
 // 今日诗词
 let oneUrl = `https://v2.jinrishici.com/one.json`
+
 let clock = {
     time: '',
     date: '',
@@ -12,6 +15,7 @@ let clock = {
 let settings = {
     setRandomBg: true,
     setHours: false,
+    setBackgroundUrl: 'unsplash',
     setWeather: true,
     setSearch: true,
     setOneMsg: true,
@@ -19,19 +23,20 @@ let settings = {
     oneMsgToken: ''
 }
 
-let updateTimeInterval;
+let updateTimeInterval,backgroundUrl = unsplashUrl;
 config()
 // updateWeather()
 
 
 function config() {
 
-    chrome.storage.local.get({ bgImg: '', randomBg: 'true', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
+    chrome.storage.local.get({ bgImg: '', randomBg: 'true',backgroundUrl: 'unsplash', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
         let items = $('.setting-list .setting-item');
         settings.setHours = config.timeFormat === '12';
         settings.setTime = config.time === 'true';
         settings.setRandomBg = config.randomBg === 'true';
-        settings.setWeather = config.weather === 'true';
+        settings.backgroundUrl = config.backgroundUrl;
+        // settings.setWeather = config.weather === 'true';
         settings.setSearch = config.search === 'true';
         settings.setOneMsg = config.oneMsg === 'true';
         settings.oneMsgToken = config.oneMsgToken;
@@ -40,12 +45,19 @@ function config() {
             $('#background-image').attr({ 'src': config.bgImg })
             $('#background-image').fadeIn();
             $('.select-background').show();
+            $('.select-background-url').hide();
         } else {
-            updateBg();
+            $('.select-background-url').show();
+            if(settings.backgroundUrl == 'bing'){
+                backgroundUrl = bingUrl
+            }
+            updateBg(backgroundUrl);
         }
         if (settings.setOneMsg) {
             updateOneMsg()
+            $('#refresh-poetry').show()
         } else {
+            $('#refresh-poetry').hide()
             $('.poetry-content').hide();
         }
         if (settings.setSearch) {
@@ -62,6 +74,7 @@ function config() {
             $('.select-time-format').hide();
         }
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);
+        items.find('[name=backgroundUrl][value="' + config.backgroundUrl + '"]').attr('checked', true);
         items.find('[name=timeFormat][value="' + config.timeFormat + '"]').attr('checked', true);
         items.find('[name=time][value="' + config.time + '"]').attr('checked', true);
         // items.find('[name=weather][value="' + config.weather + '"]').attr('checked', true);
@@ -108,21 +121,37 @@ function updateOneMsg() {
 
 }
 
-function updateBg() {
+function updateBg(url) {
     $('#background').css({ 'opacity': '0' })
     $.ajax({
         type: 'get',
-        url: bingUrl,
-        data: {},
+        url: url,
+        data: {
+            page: Math.ceil(Math.random()*20)
+        },
         dataType: 'json',
         success: function(data) {
-            let randomBgIndex = Math.ceil(Math.random() * data.images.length);
-            let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
-            $('#background').css({ 'background-image': bgUrl })
-            backgroundLoaded($('#background'), true, function() {
-                $('#background-image').hide();
-                $('#background').css({ 'opacity': '1' })
-            })
+            if(url == bingUrl){
+                let randomBgIndex = Math.ceil(Math.random() * data.images.length);
+                let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
+                $('#background').css({ 'background-image': bgUrl })
+                backgroundLoaded($('#background'), true, function() {
+                    $('#background-image').hide();
+                    $('#background').css({ 'opacity': '1' })
+                })
+            }else {
+                // 二百张图片随机获取
+                let randomBgIndex = Math.ceil(Math.random() * 10);
+                let bgUrl = data.results[randomBgIndex-1].urls.regular;
+                // let bgUrl = data.results[randomBgIndex].urls.raw;
+
+                $('#background').css({ 'background-image': 'url('+ bgUrl +')'})
+                backgroundLoaded($('#background'), true, function() {
+                    $('#background-image').hide();
+                    $('#background').css({ 'opacity': '1' })
+                })
+            }
+
         },
         error: function(data) {
             let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
@@ -251,23 +280,25 @@ $('.poetry-content').on('click', function() {
     $('.poetry-whole').toggleClass('hidden');
 })
 
-// $('.app-contents').on('click',function() {
-//     $('.line').removeClass('opacity-show');
-//     $('.hide-content').removeClass('opacity-hide');
-// })
-
 $('.search-input').on('focus blur', function() {
     $('.line').toggleClass('opacity-show');
     $('.hide-content').toggleClass('opacity-hide');
 })
 
+$('.refresh').on('click',function(){
+   if($(this).hasClass('refresh-background')){
+        if($('.setting-item.select-background-url').find('input:checked').attr('value') == 'bing'){
+            backgroundUrl = bingUrl;
+        }else {
+            backgroundUrl = unsplashUrl;
+        }
+        updateBg(backgroundUrl);
+   } else if( $(this).hasClass('refresh-poetry')) {
+       updateOneMsg();
+   }
+})
 
-// $('.search-input').on('focus',function(e){
-//     e.stopPropagation();
-//     e.preventDefault();
-//     $('.line').addClass('opacity-show');
-//     $('.hide-content').addClass('opacity-hide');
-// })
+
 
 $(document).on('change', '.setting-item input[type="radio"]', function(e) {
     let $radio = $(this);
@@ -283,13 +314,29 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('radomBg保存成功！', value);
             });
             if (value === 'true') {
-                updateBg();
+                if(settings.backgroundUrl == 'bing'){
+                    backgroundUrl = bingUrl
+                }
+                updateBg(backgroundUrl);
+                $('.select-background-url').show();
                 $('.select-background').hide();
             } else {
                 config()
+                $('.select-background-url').hide();
                 $('.select-background').show();
             }
             break;
+        case 'backgroundUrl':
+            chrome.storage.local.set({ backgroundUrl: value }, function() {
+                console.log('backgroundUrl保存成功', value);
+            });
+            if(value == 'bing'){
+                backgroundUrl = bingUrl;
+            }else {
+                backgroundUrl = unsplashUrl;
+            }
+            updateBg(backgroundUrl);
+            break
         case 'timeFormat':
             chrome.storage.local.set({ timeFormat: value }, function() {
                 console.log('timeformat保存成功！', value);
@@ -333,8 +380,10 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('oneMsg保存成功！', value);
             });
             if (value === 'true') {
+                $('#refresh-poetry').show()
                 updateOneMsg()
             } else if (value === 'false') {
+                $('#refresh-poetry').hide()
                 $('.poetry-content').fadeOut();
             }
         default:

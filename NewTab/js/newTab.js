@@ -163,7 +163,7 @@ function updateBg(url) {
         },
         error: function(data) {
             let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
-            $('#background').css({ 'background': radomColor, 'opacity': '1' })
+            $('#background').css({ 'background-color': radomColor, 'opacity': '1' })
             console.log(data.code || data.msg || '出错了！')
         }
     })

@@ -100,7 +100,7 @@ $("#search-input").on('keyup', function(event) {
         return
     }
     if (indexValue === '05') {
-        jsonPURL = jsonPURL + word
+        jsonPURL = url.jsonPLink.doge + word
     }
     $.ajax({
         url: jsonPURL,

@@ -6,6 +6,11 @@ let unsplashUrl = `https://unsplash.com/napi/search/photos?query=desktop%20backg
 let weatherUrl = `https://www.tianqiapi.com/api/?version=v1&&appid=1001&appsecret=5566`
 // 今日诗词
 let oneUrl = `https://v2.jinrishici.com/one.json`
+// 一言
+let oneYan = `https://v1.hitokoto.cn/?encode=json`
+// 毒鸡汤来自
+// https://dujitang.90so.net/docs/1.0/apis/get_a_soup
+let soul = `https://dujitang.90so.net/api/soups`
 
 let clock = {
     time: '',
@@ -20,17 +25,30 @@ let settings = {
     setSearch: true,
     setOneMsg: true,
     setTime: true,
-    oneMsgToken: ''
+    setCheckenSoup: 'poisonousChickenSoup',
+    oneMsgToken: '',
 }
 
-let updateTimeInterval,backgroundUrl = unsplashUrl;
+let updateTimeInterval, backgroundUrl = unsplashUrl;
 config()
 // updateWeather()
 
 
 function config() {
 
-    chrome.storage.local.get({ bgImg: '', randomBg: 'true',backgroundUrl: 'unsplash', timeFormat: '24', time: 'true', weather: 'true', search: 'true', oneMsg: 'true', oneMsgToken: '' }, function(config) {
+    chrome.storage.local.get(
+    { 
+        bgImg: '', 
+        randomBg: 'true', 
+        backgroundUrl: 'unsplash', 
+        timeFormat: '24', 
+        time: 'true', 
+        weather: 'true', 
+        search: 'true', 
+        oneMsg: 'true', 
+        checkenSoup: 'poisonousChickenSoup', 
+        oneMsgToken: '' 
+    }, function(config) {
         let items = $('.setting-list .setting-item');
         settings.setHours = config.timeFormat === '12';
         settings.setTime = config.time === 'true';
@@ -40,6 +58,7 @@ function config() {
         settings.setSearch = config.search === 'true';
         settings.setOneMsg = config.oneMsg === 'true';
         settings.oneMsgToken = config.oneMsgToken;
+        settings.setCheckenSoup = config.checkenSoup;
 
         if (!settings.setRandomBg && config.bgImg !== '') {
             $('#background-image').attr({ 'src': config.bgImg })
@@ -48,11 +67,12 @@ function config() {
             $('.select-background-url').hide();
         } else {
             $('.select-background-url').show();
-            if(settings.backgroundUrl == 'bing'){
+            if (settings.backgroundUrl == 'bing') {
                 backgroundUrl = bingUrl
             }
             updateBg(backgroundUrl);
         }
+
         if (settings.setOneMsg) {
             updateOneMsg()
             $('#refresh-poetry').show()
@@ -60,11 +80,13 @@ function config() {
             $('#refresh-poetry').hide()
             $('.poetry-content').hide();
         }
+
         if (settings.setSearch) {
             $('.search-box').show();
         } else {
             $('.search-box').hide();
         }
+
         if (settings.setTime) {
             updateTime(settings.setHours)
             $('.select-time-format').show();
@@ -73,6 +95,16 @@ function config() {
             $('.clock-inner').hide();
             $('.select-time-format').hide();
         }
+
+        if(settings.setCheckenSoup == 'poisonousChickenSoup'){
+            updateCheckenSoup(false)
+
+        }else if(settings.setCheckenSoup == 'chickenSoup'){
+            updateCheckenSoup(true)
+        }else {
+            $('.checken-soup').hide()
+        }
+
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);
         items.find('[name=backgroundUrl][value="' + config.backgroundUrl + '"]').attr('checked', true);
         items.find('[name=timeFormat][value="' + config.timeFormat + '"]').attr('checked', true);
@@ -80,6 +112,7 @@ function config() {
         // items.find('[name=weather][value="' + config.weather + '"]').attr('checked', true);
         items.find('[name=search][value="' + config.search + '"]').attr('checked', true);
         items.find('[name=oneMsg][value="' + config.oneMsg + '"]').attr('checked', true);
+        items.find('[name=checkenSoup][value="' + config.checkenSoup + '"]').attr('checked', true);
     });
 }
 
@@ -121,17 +154,51 @@ function updateOneMsg() {
 
 }
 
+function updateCheckenSoup(flag) {
+    if (flag) {
+        $.ajax({
+            type: 'get',
+            url: oneYan,
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                $('.checken-soup-text').text(data.hitokoto)
+                $('.checken-soup-from').text(' — ' + data.from)
+                $('.checken-soup').fadeIn();
+            },
+            error: function(data) {
+                console.log(data.code || data.msg || '出错了！')
+            }
+        })
+    } else {
+        $.ajax({
+            type: 'get',
+            url: soul,
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                $('.checken-soup-text').text(data.title)
+                $('.checken-soup-from').text('')
+                $('.checken-soup').fadeIn();
+            },
+            error: function(data) {
+                console.log(data.code || data.msg || '出错了！')
+            }
+        })
+    }
+}
+
 function updateBg(url) {
     $('#background').css({ 'opacity': '0' })
     $.ajax({
         type: 'get',
         url: url,
         data: {
-            page: Math.ceil(Math.random()*20)
+            page: Math.ceil(Math.random() * 20)
         },
         dataType: 'json',
         success: function(data) {
-            if(url == bingUrl){
+            if (url == bingUrl) {
                 let randomBgIndex = Math.ceil(Math.random() * data.images.length);
                 let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
                 $('#background').css({ 'background-image': bgUrl })
@@ -139,13 +206,13 @@ function updateBg(url) {
                     $('#background-image').hide();
                     $('#background').css({ 'opacity': '1' })
                 })
-            }else {
+            } else {
                 // 二百张图片随机获取
                 let randomBgIndex = Math.ceil(Math.random() * 10);
                 // 修改图片质量
-                
+
                 // 常规 0-1 M
-                let bgUrl = data.results[randomBgIndex-1].urls.regular;
+                let bgUrl = data.results[randomBgIndex - 1].urls.regular;
 
                 // 全屏 2~5M
                 // let bgUrl = data.results[randomBgIndex].urls.full;
@@ -153,7 +220,7 @@ function updateBg(url) {
                 // 原生 10+M
                 // let bgUrl = data.results[randomBgIndex].urls.raw;
 
-                $('#background').css({ 'background-image': 'url('+ bgUrl +')'})
+                $('#background').css({ 'background-image': 'url(' + bgUrl + ')' })
                 backgroundLoaded($('#background'), true, function() {
                     $('#background-image').hide();
                     $('#background').css({ 'opacity': '1' })
@@ -293,17 +360,33 @@ $('.search-input').on('focus blur', function() {
     $('.hide-content').toggleClass('opacity-hide');
 })
 
-$('.refresh').on('click',function(){
-   if($(this).hasClass('refresh-background')){
-        if($('.setting-item.select-background-url').find('input:checked').attr('value') == 'bing'){
-            backgroundUrl = bingUrl;
-        }else {
-            backgroundUrl = unsplashUrl;
-        }
-        updateBg(backgroundUrl);
-   } else if( $(this).hasClass('refresh-poetry')) {
-       updateOneMsg();
-   }
+$('.refresh').on('click', function() {
+    var checkRadio = $(this).siblings().children('[type=radio]:checked');
+    var checkName = checkRadio.attr('name')
+    var checkValue = checkRadio.attr('value')
+    // console.log(checkName,checkValue)
+    switch(checkName) {
+        case 'backgroundUrl':
+            if (checkValue== 'bing') {
+                backgroundUrl = bingUrl;
+            } else {
+                backgroundUrl = unsplashUrl;
+            }
+            updateBg(backgroundUrl);
+            break;
+        case 'oneMsg':
+            if (checkValue== 'true') {
+                updateOneMsg();
+            }
+            break;
+        case 'checkenSoup':
+            if (checkValue== 'checkenSoup') {
+                updateCheckenSoup(true);
+            }else if(checkValue == 'poisonousChickenSoup'){
+                updateCheckenSoup(false);
+            }
+            break;
+    }
 })
 
 
@@ -322,7 +405,7 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('radomBg保存成功！', value);
             });
             if (value === 'true') {
-                if(settings.backgroundUrl == 'bing'){
+                if (settings.backgroundUrl == 'bing') {
                     backgroundUrl = bingUrl
                 }
                 updateBg(backgroundUrl);
@@ -338,9 +421,9 @@ function listenRadioChange(radioList, radioName, value) {
             chrome.storage.local.set({ backgroundUrl: value }, function() {
                 console.log('backgroundUrl保存成功', value);
             });
-            if(value == 'bing'){
+            if (value == 'bing') {
                 backgroundUrl = bingUrl;
-            }else {
+            } else {
                 backgroundUrl = unsplashUrl;
             }
             updateBg(backgroundUrl);
@@ -388,11 +471,25 @@ function listenRadioChange(radioList, radioName, value) {
                 console.log('oneMsg保存成功！', value);
             });
             if (value === 'true') {
-                $('#refresh-poetry').show()
+                $('#refresh-poetry').fadeIn()
                 updateOneMsg()
             } else if (value === 'false') {
                 $('#refresh-poetry').hide()
                 $('.poetry-content').fadeOut();
+            }
+        case 'checkenSoup':
+            chrome.storage.local.set({ checkenSoup: value }, function() {
+                console.log('checkenSoup保存成功！', value);
+            });
+            if (value === 'checkenSoup') {
+                $('#refresh-checken-soup').fadeIn()
+                updateCheckenSoup(true)
+            } else if (value === 'poisonousChickenSoup') {
+                $('#refresh-checken-soup').fadeIn()
+                updateCheckenSoup(false)
+            }else if(value === 'hidden') {
+                $('#refresh-checken-soup').fadeOut()
+                $('.checken-soup').fadeOut()
             }
         default:
             break;

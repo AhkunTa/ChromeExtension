@@ -20,6 +20,7 @@
         "https://duckduckgo.com/*",
         "https://www.dogedoge.com/*",
         "https://unsplash.com/*",
+        "https://v1.hitokoto.cn/?encode=json",
         "contextMenus",
         "tabs"
     ],

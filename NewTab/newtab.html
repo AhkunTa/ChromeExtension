@@ -23,7 +23,7 @@
                 </div>
                 <div class="search-box">
                     <div class="link-box">
-                        <div class="link" id="link">Links</div>
+                        <div class="link" id="link">Search</div>
                         <div class="link-tabs">
                             <div>
                             </div>
@@ -80,6 +80,12 @@
                     <div class="clock-time" id="time"></div>
                     <span class="morning-afternoon hidden" id="am-pm"></span>
                     <div class="clock-day" id="date"></div>
+                </div>
+            </div>
+            <div class="checken-soup bottom-center">
+                <div class="checken-soup-box">
+                    <span class="checken-soup-text"></span>
+                    <span class="checken-soup-from"></span>
                 </div>
             </div>
             <div class="footer absolute-bottom">
@@ -175,10 +181,23 @@
                 </label>
                 <div class="refresh refresh-poetry" id="refresh-poetry"></div>
             </div>
+            <div class="setting-item select-checken-soup">
+                <label class="radio-item">
+                    <input type="radio" name="checkenSoup" value="checkenSoup"><span>选择鸡汤</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="checkenSoup" value="poisonousChickenSoup"><span>选择毒鸡汤</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="checkenSoup" value="hidden"><span>隐藏</span>
+                </label>
+                <div class="refresh refresh-checken-soup" id="refresh-checken-soup"></div>
+            </div>
         </div>
     </div>
 </body>
 <script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/newTab.js"></script>
+<!-- <script src="js/poisonousChickenSoup.js"></script>
+ --><script src="js/newTab.js"></script>
 <script src="js/search.js"></script>
 </html>

@@ -25,7 +25,16 @@ body {
 
 .absolute-center {
     position: absolute;
-    top: 50%;
+    top: 45%;
+    left: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translate(-50%, -50%)
+}
+
+.bottom-center {
+    position: absolute;
+    top: 60%;
     left: 50%;
     width: 100%;
     text-align: center;
@@ -83,9 +92,6 @@ body {
     fadein .3s ease-out 0s forwards
 }
 
-
-.clock-box {}
-
 .clock-inner {
     position: relative;
     display: inline-block;
@@ -106,6 +112,16 @@ body {
 .clock-inner .clock-day {
     font-size: 150%;
     display: none;
+}
+
+.checken-soup-box {
+    padding: 0 100px;
+    font-size: 32px;
+    text-align: center;
+}
+.checken-soup-from {
+    font-size: 20px;
+    font-color: #ffffffe6;
 }
 
 .background-image {
@@ -434,8 +450,8 @@ body {
     position: fixed;
     bottom: 50px;
     height: 50%;
-    width: 300px;
-    left: -300px;
+    width: 350px;
+    left: -350px;
     opacity: 0.5;
     background: #0f0f0fcc;
     transition: all .5s ease-in;

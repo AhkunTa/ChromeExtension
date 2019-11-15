@@ -18,6 +18,7 @@ let clock = {
     am_pm: ''
 }
 let settings = {
+    setBgImg: '',
     setRandomBg: true,
     setHours: false,
     setBackgroundUrl: 'unsplash',
@@ -36,20 +37,20 @@ config()
 
 function config() {
 
-    chrome.storage.local.get(
-    { 
-        bgImg: '', 
-        randomBg: 'true', 
-        backgroundUrl: 'unsplash', 
-        timeFormat: '24', 
-        time: 'true', 
-        weather: 'true', 
-        search: 'true', 
-        oneMsg: 'true', 
-        checkenSoup: 'poisonousChickenSoup', 
-        oneMsgToken: '' 
+    chrome.storage.local.get({
+        bgImg: '',
+        randomBg: 'true',
+        backgroundUrl: 'unsplash',
+        timeFormat: '24',
+        time: 'true',
+        weather: 'true',
+        search: 'true',
+        oneMsg: 'true',
+        checkenSoup: 'poisonousChickenSoup',
+        oneMsgToken: ''
     }, function(config) {
         let items = $('.setting-list .setting-item');
+        settings.setBgImg = config.bgImg;
         settings.setHours = config.timeFormat === '12';
         settings.setTime = config.time === 'true';
         settings.setRandomBg = config.randomBg === 'true';
@@ -96,12 +97,12 @@ function config() {
             $('.select-time-format').hide();
         }
 
-        if(settings.setCheckenSoup == 'poisonousChickenSoup'){
+        if (settings.setCheckenSoup == 'poisonousChickenSoup') {
             updateCheckenSoup(false)
 
-        }else if(settings.setCheckenSoup == 'chickenSoup'){
+        } else if (settings.setCheckenSoup == 'chickenSoup') {
             updateCheckenSoup(true)
-        }else {
+        } else {
             $('.checken-soup').hide()
         }
 
@@ -151,7 +152,6 @@ function updateOneMsg() {
             console.log(data.errMessage || data.errCode || 'oneMsg出错了！')
         }
     })
-
 }
 
 function updateCheckenSoup(flag) {
@@ -189,6 +189,7 @@ function updateCheckenSoup(flag) {
 }
 
 function updateBg(url) {
+    $('#background').hide();
     $('#background').css({ 'opacity': '0' })
     $.ajax({
         type: 'get',
@@ -203,7 +204,19 @@ function updateBg(url) {
                 let bgUrl = 'url(https://cn.bing.com' + data.images[randomBgIndex - 1].url + ')';
                 $('#background').css({ 'background-image': bgUrl })
                 backgroundLoaded($('#background'), true, function() {
+                    if ($('.select-radom .radio-item [type=radio]:checked').attr('value') == 'false') {
+                        $('#background-image').attr({ 'src': settings.setBgImg })
+                        $('#background-image').fadeIn();
+                        $('.select-background').show();
+                        $('.select-background-url').hide();
+                        return
+                    }
+                    // if ($('.select-background-url .radio-item [type=radio]:checked').attr('value') == 'unsplash') {
+                    //     console.log(111)
+                    //     return
+                    // }
                     $('#background-image').hide();
+                    $('#background').show();
                     $('#background').css({ 'opacity': '1' })
                 })
             } else {
@@ -222,7 +235,19 @@ function updateBg(url) {
 
                 $('#background').css({ 'background-image': 'url(' + bgUrl + ')' })
                 backgroundLoaded($('#background'), true, function() {
+                    if ($('.select-radom .radio-item [type=radio]:checked').attr('value') == 'false') {
+                        $('#background-image').attr({ 'src': settings.setBgImg })
+                        $('#background-image').fadeIn();
+                        $('.select-background').show();
+                        $('.select-background-url').hide();
+                        return
+                    }
+                    // if ($('.select-background-url .radio-item [type=radio]:checked').attr('value') == 'bing') {
+                    //     console.log(222)
+                    //     return
+                    // }
                     $('#background-image').hide();
+                    $('#background').show();
                     $('#background').css({ 'opacity': '1' })
                 })
             }
@@ -364,10 +389,9 @@ $('.refresh').on('click', function() {
     var checkRadio = $(this).siblings().children('[type=radio]:checked');
     var checkName = checkRadio.attr('name')
     var checkValue = checkRadio.attr('value')
-    // console.log(checkName,checkValue)
-    switch(checkName) {
+    switch (checkName) {
         case 'backgroundUrl':
-            if (checkValue== 'bing') {
+            if (checkValue == 'bing') {
                 backgroundUrl = bingUrl;
             } else {
                 backgroundUrl = unsplashUrl;
@@ -375,21 +399,19 @@ $('.refresh').on('click', function() {
             updateBg(backgroundUrl);
             break;
         case 'oneMsg':
-            if (checkValue== 'true') {
+            if (checkValue == 'true') {
                 updateOneMsg();
             }
             break;
         case 'checkenSoup':
-            if (checkValue== 'checkenSoup') {
+            if (checkValue == 'checkenSoup') {
                 updateCheckenSoup(true);
-            }else if(checkValue == 'poisonousChickenSoup'){
+            } else if (checkValue == 'poisonousChickenSoup') {
                 updateCheckenSoup(false);
             }
             break;
     }
 })
-
-
 
 $(document).on('change', '.setting-item input[type="radio"]', function(e) {
     let $radio = $(this);
@@ -398,29 +420,35 @@ $(document).on('change', '.setting-item input[type="radio"]', function(e) {
     listenRadioChange($radioList, $radioName, $radio.val());
 });
 
+function chromeStorageSet(key, value) {
+    chrome.storage.local.set({
+        [key]: value
+    }, function() {
+        console.log(key, '保存成功！', value);
+    });
+}
+
+
 function listenRadioChange(radioList, radioName, value) {
     switch (radioName) {
         case 'randomBg':
-            chrome.storage.local.set({ randomBg: value }, function() {
-                console.log('radomBg保存成功！', value);
-            });
+            chromeStorageSet('randomBg', value)
             if (value === 'true') {
-                if (settings.backgroundUrl == 'bing') {
+                if ($('.select-background-url [type=radio]:checked') == 'bing') {
                     backgroundUrl = bingUrl
                 }
                 updateBg(backgroundUrl);
                 $('.select-background-url').show();
                 $('.select-background').hide();
             } else {
-                config()
-                $('.select-background-url').hide();
+                $('#background-image').attr({ 'src': settings.setBgImg })
+                $('#background-image').fadeIn();
                 $('.select-background').show();
+                $('.select-background-url').hide();
             }
             break;
         case 'backgroundUrl':
-            chrome.storage.local.set({ backgroundUrl: value }, function() {
-                console.log('backgroundUrl保存成功', value);
-            });
+            chromeStorageSet('backgroundUrl', value)
             if (value == 'bing') {
                 backgroundUrl = bingUrl;
             } else {
@@ -429,9 +457,7 @@ function listenRadioChange(radioList, radioName, value) {
             updateBg(backgroundUrl);
             break
         case 'timeFormat':
-            chrome.storage.local.set({ timeFormat: value }, function() {
-                console.log('timeformat保存成功！', value);
-            });
+            chromeStorageSet('timeFormat', value);
             if (value === '12') {
                 settings.setHours = true
                 updateTime(true)
@@ -441,9 +467,7 @@ function listenRadioChange(radioList, radioName, value) {
             }
             break;
         case 'time':
-            chrome.storage.local.set({ time: value }, function() {
-                console.log('time保存成功！', value);
-            });
+            chromeStorageSet('time', value);
             if (value === 'true') {
                 updateTime(settings.setHours);
                 $('.clock-inner').fadeIn();
@@ -457,9 +481,7 @@ function listenRadioChange(radioList, radioName, value) {
         case 'weather':
             break;
         case 'search':
-            chrome.storage.local.set({ search: value }, function() {
-                console.log('search保存成功！', value);
-            });
+            chromeStorageSet('search', value);
             if (value === 'true') {
                 $('.search-box').fadeIn();
             } else if (value === 'false') {
@@ -467,9 +489,7 @@ function listenRadioChange(radioList, radioName, value) {
             }
             break;
         case 'oneMsg':
-            chrome.storage.local.set({ oneMsg: value }, function() {
-                console.log('oneMsg保存成功！', value);
-            });
+            chromeStorageSet('oneMsg', value);
             if (value === 'true') {
                 $('#refresh-poetry').fadeIn()
                 updateOneMsg()
@@ -478,16 +498,14 @@ function listenRadioChange(radioList, radioName, value) {
                 $('.poetry-content').fadeOut();
             }
         case 'checkenSoup':
-            chrome.storage.local.set({ checkenSoup: value }, function() {
-                console.log('checkenSoup保存成功！', value);
-            });
+            chromeStorageSet('checkenSoup', value);
             if (value === 'checkenSoup') {
                 $('#refresh-checken-soup').fadeIn()
                 updateCheckenSoup(true)
             } else if (value === 'poisonousChickenSoup') {
                 $('#refresh-checken-soup').fadeIn()
                 updateCheckenSoup(false)
-            }else if(value === 'hidden') {
+            } else if (value === 'hidden') {
                 $('#refresh-checken-soup').fadeOut()
                 $('.checken-soup').fadeOut()
             }

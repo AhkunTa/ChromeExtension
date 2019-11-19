@@ -167,7 +167,7 @@ function updateCheckenSoup(flag) {
                 $('.checken-soup').fadeIn();
             },
             error: function(data) {
-                console.log(data.code || data.msg || '出错了！')
+                console.log(data.code || data.msg || '一言出错了！')
             }
         })
     } else {
@@ -182,7 +182,11 @@ function updateCheckenSoup(flag) {
                 $('.checken-soup').fadeIn();
             },
             error: function(data) {
-                console.log(data.code || data.msg || '出错了！')
+                let randomSoul = Math.ceil(soulArr.length * Math.random());
+                $('.checken-soup-text').text(soulArr[randomSoul-1]);
+                $('.checken-soup-from').text('');
+                $('.checken-soup').fadeIn();
+                console.log(data.code || data.msg || '毒鸡汤出错了！')
             }
         })
     }
@@ -254,9 +258,11 @@ function updateBg(url) {
 
         },
         error: function(data) {
+            $('#background').show();
+            $('#background').css({ 'opacity': '1' })
             let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
             $('#background').css({ 'background-color': radomColor, 'opacity': '1' })
-            console.log(data.code || data.msg || '出错了！')
+            console.log(data.code || data.msg || '背景出错了！')
         }
     })
 }

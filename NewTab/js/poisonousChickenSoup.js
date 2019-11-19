@@ -1,7 +1,7 @@
 // 数据来自
 // https://github.com/mzlogin/dujitang/blob/master/assets/index.js
 // 已弃用 
-let soul = [
+let soulArr = [
     '所谓成长，就是在听到波涛汹涌四个字，再也联想不到大海了。',
     '一些年轻人，通过高端消费来营造自己高端收入的形象。',
     '一个姑娘的介绍：思想上的女流氓，生活中的好姑娘。 然而给我的感觉是：心思活络的丑逼。',

@@ -26,7 +26,7 @@ let settings = {
     setSearch: true,
     setOneMsg: true,
     setTime: true,
-    setCheckenSoup: 'poisonousChickenSoup',
+    setChickenSoup: 'poisonousChickenSoup',
     oneMsgToken: '',
 }
 
@@ -46,7 +46,7 @@ function config() {
         weather: 'true',
         search: 'true',
         oneMsg: 'true',
-        checkenSoup: 'poisonousChickenSoup',
+        chickenSoup: 'poisonousChickenSoup',
         oneMsgToken: ''
     }, function(config) {
         let items = $('.setting-list .setting-item');
@@ -59,7 +59,7 @@ function config() {
         settings.setSearch = config.search === 'true';
         settings.setOneMsg = config.oneMsg === 'true';
         settings.oneMsgToken = config.oneMsgToken;
-        settings.setCheckenSoup = config.checkenSoup;
+        settings.setChickenSoup = config.chickenSoup;
 
         if (!settings.setRandomBg && config.bgImg !== '') {
             $('#background-image').attr({ 'src': config.bgImg })
@@ -69,7 +69,7 @@ function config() {
         } else {
             $('.select-background-url').show();
             if (settings.backgroundUrl == 'bing') {
-                backgroundUrl = bingUrl
+                backgroundUrl = bingUrl;
             }
             updateBg(backgroundUrl);
         }
@@ -97,13 +97,13 @@ function config() {
             $('.select-time-format').hide();
         }
 
-        if (settings.setCheckenSoup == 'poisonousChickenSoup') {
-            updateCheckenSoup(false)
+        if (settings.setChickenSoup == 'poisonousChickenSoup') {
+            updateChickenSoup(false)
 
-        } else if (settings.setCheckenSoup == 'chickenSoup') {
-            updateCheckenSoup(true)
+        } else if (settings.setChickenSoup == 'chickenSoup') {
+            updateChickenSoup(true)
         } else {
-            $('.checken-soup').hide()
+            $('.chicken-soup').hide()
         }
 
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);
@@ -113,7 +113,7 @@ function config() {
         // items.find('[name=weather][value="' + config.weather + '"]').attr('checked', true);
         items.find('[name=search][value="' + config.search + '"]').attr('checked', true);
         items.find('[name=oneMsg][value="' + config.oneMsg + '"]').attr('checked', true);
-        items.find('[name=checkenSoup][value="' + config.checkenSoup + '"]').attr('checked', true);
+        items.find('[name=chickenSoup][value="' + config.chickenSoup + '"]').attr('checked', true);
     });
 }
 
@@ -132,10 +132,10 @@ function updateOneMsg() {
             let content = data.data.content;
             let origin = data.data.origin;
             let str = '';
-            $('#content').text(content)
-            $('#poetry-name').text(origin.title + ' — ' + origin.author)
-            $('.poetry-whole-title').text(origin.title)
-            $('.poetry-whole-dynasty').text(origin.dynasty + ' — ' + origin.author)
+            $('#content').text(content);
+            $('#poetry-name').text(origin.title + ' — ' + origin.author);
+            $('.poetry-whole-title').text(origin.title);
+            $('.poetry-whole-dynasty').text(origin.dynasty + ' — ' + origin.author);
             for (let i = 0; i < origin.content.length; i++) {
                 str = str + `<li class="item">${origin.content[i]}</li>`;
             }
@@ -143,18 +143,18 @@ function updateOneMsg() {
             $('.poetry-content').fadeIn();
             if (settings.oneMsgToken !== data.token) {
                 chrome.storage.local.set({ oneMsgToken: data.token }, function(config) {
-                    console.log('oneMsgToken保存成功！', data.token)
+                    console.log('oneMsgToken保存成功！', data.token);
                 })
             }
         },
         error: function(data) {
             $('.poetry-content').fadeOut();
-            console.log(data.errMessage || data.errCode || 'oneMsg出错了！')
+            console.log(data.errMessage || data.errCode || 'oneMsg出错了！');
         }
     })
 }
 
-function updateCheckenSoup(flag) {
+function updateChickenSoup(flag) {
     if (flag) {
         $.ajax({
             type: 'get',
@@ -162,9 +162,9 @@ function updateCheckenSoup(flag) {
             data: {},
             dataType: 'json',
             success: function(data) {
-                $('.checken-soup-text').text(data.hitokoto)
-                $('.checken-soup-from').text(' — ' + data.from)
-                $('.checken-soup').fadeIn();
+                $('.chicken-soup-text').text(data.hitokoto)
+                $('.chicken-soup-from').text(' — ' + data.from)
+                $('.chicken-soup').fadeIn();
             },
             error: function(data) {
                 console.log(data.code || data.msg || '一言出错了！')
@@ -177,15 +177,15 @@ function updateCheckenSoup(flag) {
             data: {},
             dataType: 'json',
             success: function(data) {
-                $('.checken-soup-text').text(data.title)
-                $('.checken-soup-from').text('')
-                $('.checken-soup').fadeIn();
+                $('.chicken-soup-text').text(data.title)
+                $('.chicken-soup-from').text('')
+                $('.chicken-soup').fadeIn();
             },
             error: function(data) {
                 let randomSoul = Math.ceil(soulArr.length * Math.random());
-                $('.checken-soup-text').text(soulArr[randomSoul-1]);
-                $('.checken-soup-from').text('');
-                $('.checken-soup').fadeIn();
+                $('.chicken-soup-text').text(soulArr[randomSoul-1]);
+                $('.chicken-soup-from').text('');
+                $('.chicken-soup').fadeIn();
                 console.log(data.code || data.msg || '毒鸡汤出错了！')
             }
         })
@@ -252,7 +252,7 @@ function updateBg(url) {
                     // }
                     $('#background-image').hide();
                     $('#background').show();
-                    $('#background').css({ 'opacity': '1' })
+                    $('#background').css({ 'opacity': '1' });
                 })
             }
 
@@ -279,8 +279,8 @@ function backgroundLoaded(backgroundImageEle, isbackground, callback) {
     img.src = imgUrl;
     let timer = setInterval(function() {
         if (img.complete) {
-            clearInterval(timer)
-            callback()
+            clearInterval(timer);
+            callback();
         }
     }, 200)
 }
@@ -296,7 +296,7 @@ function updateWeather() {
         },
         dataType: 'json',
         success: function(data) {
-            console.log(data)
+            console.log(data);
         },
         error: function(data) {}
     })
@@ -329,12 +329,12 @@ function getLangDate(twelveHour) {
     let hour = dateObj.getHours();
     let minute = dateObj.getMinutes();
     if (hour < 12) {
-        clock.am_pm = 'AM'
+        clock.am_pm = 'AM';
     } else {
         if (twelveHour) {
-            hour = hour - 12
+            hour = hour - 12;
         }
-        clock.am_pm = 'PM'
+        clock.am_pm = 'PM';
     }
     clock.time = `${dateFilter(hour)}:${dateFilter(minute)}`;
     // clock.date = `${dateFilter(year)} / ${dateFilter(month)} / ${dateFilter(date)}`;
@@ -409,11 +409,11 @@ $('.refresh').on('click', function() {
                 updateOneMsg();
             }
             break;
-        case 'checkenSoup':
-            if (checkValue == 'checkenSoup') {
-                updateCheckenSoup(true);
+        case 'chickenSoup':
+            if (checkValue == 'chickenSoup') {
+                updateChickenSoup(true);
             } else if (checkValue == 'poisonousChickenSoup') {
-                updateCheckenSoup(false);
+                updateChickenSoup(false);
             }
             break;
     }
@@ -497,23 +497,23 @@ function listenRadioChange(radioList, radioName, value) {
         case 'oneMsg':
             chromeStorageSet('oneMsg', value);
             if (value === 'true') {
-                $('#refresh-poetry').fadeIn()
+                $('#refresh-poetry').fadeIn();
                 updateOneMsg()
             } else if (value === 'false') {
-                $('#refresh-poetry').hide()
+                $('#refresh-poetry').hide();
                 $('.poetry-content').fadeOut();
             }
-        case 'checkenSoup':
-            chromeStorageSet('checkenSoup', value);
-            if (value === 'checkenSoup') {
-                $('#refresh-checken-soup').fadeIn()
-                updateCheckenSoup(true)
+        case 'chickenSoup':
+            chromeStorageSet('chickenSoup', value);
+            if (value === 'chickenSoup') {
+                $('#refresh-chicken-soup').fadeIn();
+                updateChickenSoup(true);
             } else if (value === 'poisonousChickenSoup') {
-                $('#refresh-checken-soup').fadeIn()
-                updateCheckenSoup(false)
+                $('#refresh-chicken-soup').fadeIn();
+                updateChickenSoup(false);
             } else if (value === 'hidden') {
-                $('#refresh-checken-soup').fadeOut()
-                $('.checken-soup').fadeOut()
+                $('#refresh-chicken-soup').fadeOut();
+                $('.chicken-soup').fadeOut();
             }
         default:
             break;

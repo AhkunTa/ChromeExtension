@@ -78,7 +78,7 @@ function eventListeners() {
 
 
     $("#search-input").on('focus', function(event) {
-        $('.content-list').removeClass('hidden')
+        $('.content-list').removeClass('hidden');
     })
 
     $("#search-input").on('keyup', function(event) {
@@ -90,7 +90,7 @@ function eventListeners() {
             return
         }
         if (indexValue === '05') {
-            jsonPURL = url.jsonPLink.doge + word
+            jsonPURL = url.jsonPLink.doge + word;
         }
         $.ajax({
             url: jsonPURL,
@@ -102,7 +102,7 @@ function eventListeners() {
                     array;
                 if (indexValue === '01') {
                     // baidu
-                    array = data.g
+                    array = data.g;
                     if (array) {
                         for (let i = 0; i < array.length; i++) {
                             str = str + `<li class="item">${array[i].q}</li>`;
@@ -136,7 +136,7 @@ function eventListeners() {
                 } else if (indexValue === '04') {
                     // 360
                     array = data.result;
-                    let arrayLength = array.length
+                    let arrayLength = array.length;
                     if (array) {
                         arrayLength = arrayLength >= 10 ? 10 : arrayLength
                         for (let i = 0; i < arrayLength; i++) {
@@ -156,7 +156,7 @@ function eventListeners() {
                 } else if (indexValue === '06') {
                     // duck
                     array = data;
-                    let arrayLength = array.length
+                    let arrayLength = array.length;
                     if (array) {
                         arrayLength = arrayLength >= 10 ? 10 : arrayLength
                         for (let i = 0; i < arrayLength; i++) {
@@ -170,7 +170,7 @@ function eventListeners() {
                 if (indexValue === '02' || indexValue === '06') {
                     console.log('访问google和duckduckgo需自带梯子')
                 }
-                console.log(data, textStatus, errThrown)
+                console.log(data, textStatus, errThrown);
             }
         });
     })
@@ -178,7 +178,7 @@ function eventListeners() {
 
     $('.content-list').on('mouseover', '.item', function() {
         $(this).removeClass('choose-bg-color');
-        $(this).addClass('choose-bg-color')
+        $(this).addClass('choose-bg-color');
     })
     $('.content-list').on('mouseout', '.item', function() {
         $(this).removeClass('choose-bg-color');
@@ -209,12 +209,12 @@ function jumpToPage() {
         window.open(normalUrl + word);
     })
     $('.content-list').on('click', '.item', function() {
-        window.open(normalUrl + $(this).text())
+        window.open(normalUrl + $(this).text());
     })
 }
 
 function addBgcolor(chooseItem) {
-    $('.content-list .item').removeClass('choose-bg-color')
+    $('.content-list .item').removeClass('choose-bg-color');
     $('.content-list .item').eq(chooseItem).addClass('choose-bg-color');
     $('#search-input').val($('.content-list .item').eq(chooseItem).text());
 }
@@ -255,7 +255,7 @@ function ajaxDataType(searchEngineIndex) {
 
 function ajaxJsonp(searchEngineIndex) {
     word = $('#search-input').val();
-    let data = {}
+    let data = {};
     switch (searchEngineIndex) {
         case '01':
             // baidu

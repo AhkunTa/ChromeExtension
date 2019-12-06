@@ -81,7 +81,7 @@ function eventListeners() {
         $('.content-list').removeClass('hidden');
     })
 
-    $("#search-input").on('keyup', function(event) {
+    $("#search-input").on('keyup', debounce(function(event) {
         word = $('#search-input').val();
         if (word.trim() == '') {
             $('.content-list').html('');
@@ -173,7 +173,7 @@ function eventListeners() {
                 console.log(data, textStatus, errThrown);
             }
         });
-    })
+    },200))
 
 
     $('.content-list').on('mouseover', '.item', function() {
@@ -202,7 +202,16 @@ function eventListeners() {
     })
 }
 
-
+function debounce(func, wait) {
+    let timeout = null
+    return function() {
+        let _this = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            func.apply(_this, args);
+        }, wait);
+    };
+};
 
 function jumpToPage() {
     $('.search-btn').on('click', function() {

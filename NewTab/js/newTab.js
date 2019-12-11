@@ -76,9 +76,9 @@ function config() {
 
         if (settings.setOneMsg) {
             updateOneMsg()
-            $('#refresh-poetry').show()
+            $('#refresh-poetry').show();
         } else {
-            $('#refresh-poetry').hide()
+            $('#refresh-poetry').hide();
             $('.poetry-content').hide();
         }
 
@@ -98,12 +98,14 @@ function config() {
         }
 
         if (settings.setChickenSoup == 'poisonousChickenSoup') {
-            updateChickenSoup(false)
-
+            updateChickenSoup(false);
+            $('#refresh-chicken-soup').show();
         } else if (settings.setChickenSoup == 'chickenSoup') {
-            updateChickenSoup(true)
+            updateChickenSoup(true);
+            $('#refresh-chicken-soup').show();
         } else {
-            $('.chicken-soup').hide()
+            $('.chicken-soup').hide();
+            $('#refresh-chicken-soup').hide();
         }
 
         items.find('[name=randomBg][value="' + config.randomBg + '"]').attr('checked', true);

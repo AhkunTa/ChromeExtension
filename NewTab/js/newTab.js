@@ -120,6 +120,7 @@ function config() {
 }
 
 function updateOneMsg() {
+    $('.poetry-whole').css({'max-width':`${document.documentElement.clientWidth-200}px`})
     $.ajax({
         type: 'get',
         url: oneUrl,

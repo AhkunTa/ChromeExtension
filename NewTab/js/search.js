@@ -220,6 +220,10 @@ function jumpToPage() {
     $('.content-list').on('click', '.item', function() {
         window.open(normalUrl + $(this).text());
     })
+    $('#link').on('click', function(){
+        window.open(normalUrl);
+    })
+
 }
 
 function addBgcolor(chooseItem) {

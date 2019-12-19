@@ -194,20 +194,27 @@ body {
 }
 
 .poetry-whole {
-    padding: 5px;
+    padding: 10px;
     position: absolute;
     bottom: 80px;
     left: 50%;
+    width: 130%;
     transform: translateX(-50%);
     background-color: #0f0f0fcc;
     font-size: 16px;
     border-radius: 5px;
 }
 
+.poetry-info {
+    padding: 5px;
+}
+
 .poetry-list {
+    position: relative;
     max-height: 200px;
     overflow-y: scroll;
     overflow-x: hidden;
+    max-width: 1000px;
 }
 
 
@@ -322,13 +329,19 @@ body {
     transition: opacity .2s ease-in;
 }
 
-.item {
+.poetry-list .item {
+    padding: 5px 20px;
+    list-style: none;
+    line-height: 30px;
+    font-size: 16px;
+}
+
+.content-list .item {
     padding: 0 26px;
     list-style: none;
     height: 30px;
     line-height: 30px;
-    font-size: 16px;
-    transition: background .2s ease-in;
+    font-size: 18px;
     word-break: break-all;
     white-space: nowrap;
     overflow: hidden;

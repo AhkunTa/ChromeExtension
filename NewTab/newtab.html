@@ -121,19 +121,17 @@
         </div>
         <div class="setting-list">
             <div class="setting-item select-radom">
-                <label class="radio-item">
-                    <input type="radio" name="randomBg" value="true"><span>随机图片</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="randomBg" value="false"><span>自定义图片</span>
+                <div class="check-title">随机图片</div>
+                <label class="check-item">
+                    <input type="checkbox" name="randomBg" checked >
+                    <div class="slider round"></div>
                 </label>
             </div>
             <div class="setting-item select-background-url">
-                <label class="radio-item">
-                    <input type="radio" name="backgroundUrl" value="unsplash"><span>unsplash</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="backgroundUrl" value="bing"><span>必应</span>
+                <div class="check-title">必应背景</div>
+                <label class="check-item">
+                    <input type="checkbox" name="backgroundUrl" checked >
+                    <div class="slider round"></div>
                 </label>
                 <div class="refresh refresh-background" id="refresh-background"></div>
             </div>
@@ -141,55 +139,53 @@
                 <input class="choose-image" type="file" accept="image/*" />
             </div>
             <div class="setting-item select-time">
-                <label class="radio-item">
-                    <input type="radio" name="time" value="true"><span>展示时间</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="time" value="false"><span>隐藏时间</span>
+                <div class="check-title">展示时间</div>
+                <label class="check-item">
+                    <input type="checkbox" name="time" checked >
+                    <div class="slider round"></div>
                 </label>
             </div>
             <div class="setting-item select-time-format">
-                <label class="radio-item">
-                    <input type="radio" name="timeFormat" value="24"><span>24小时</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="timeFormat" value="12"><span>12小时</span>
+                <div class="check-title">二十四小时</div>
+                <label class="check-item">
+                    <input type="checkbox" name="timeFormat" checked >
+                    <div class="slider round"></div>
                 </label>
             </div>
             <div class="setting-item select-weather hidden">
-                <label class="radio-item">
-                    <input type="radio" name="weather" value="true"><span>展示天气</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="weather" value="false"><span>隐藏天气</span>
+                <div class="check-title">展示天气</div>
+                <label class="check-item">
+                    <input type="checkbox" name="weather" checked >
+                    <div class="slider round"></div>
                 </label>
             </div>
             <div class="setting-item select-search">
-                <label class="radio-item">
-                    <input type="radio" name="search" value="true"><span>展示搜索</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="search" value="false"><span>隐藏搜索</span>
+                <div class="check-title">展示搜索</div>
+                <label class="check-item">
+                    <input type="checkbox" name="search" checked >
+                    <div class="slider round"></div>
                 </label>
             </div>
             <div class="setting-item select-poetry">
-                <label class="radio-item">
-                    <input type="radio" name="oneMsg" value="true"><span>展示古诗</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="oneMsg" value="false"><span>隐藏古诗</span>
+                <div class="check-title">展示古诗</div>
+                <label class="check-item">
+                    <input type="checkbox" name="oneMsg" checked >
+                    <div class="slider round"></div>
                 </label>
                 <div class="refresh refresh-poetry" id="refresh-poetry"></div>
             </div>
+            <div class="setting-item select-chicken-show">
+                <div class="check-title">展示鸡汤</div>
+                <label class="check-item">
+                    <input type="checkbox" name="showChickenSoup" checked >
+                    <div class="slider round"></div>
+                </label>
+            </div>
             <div class="setting-item select-chicken-soup">
-                <label class="radio-item">
-                    <input type="radio" name="chickenSoup" value="chickenSoup"><span>选择鸡汤</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="chickenSoup" value="poisonousChickenSoup"><span>选择毒鸡汤</span>
-                </label>
-                <label class="radio-item">
-                    <input type="radio" name="chickenSoup" value="hidden"><span>隐藏</span>
+                <div class="check-title">来碗鸡汤</div>
+                <label class="check-item">
+                    <input type="checkbox" name="chickenSoup" checked >
+                    <div class="slider round"></div>
                 </label>
                 <div class="refresh refresh-chicken-soup" id="refresh-chicken-soup"></div>
             </div>

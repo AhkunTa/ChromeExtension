@@ -5,7 +5,8 @@ let url = {
         google: 'https://google.com/search?q=',
         sanliu0: 'https://www.so.com/s?q=',
         doge: 'https://www.dogedoge.com/results?q=',
-        duck: 'https://duckduckgo.com/?q='
+        duck: 'https://duckduckgo.com/?q=',
+        bing: 'https://cn.bing.com/search?q='
     },
     jsonPLink: {
         baidu: 'https://www.baidu.com/sugrec?prod=pc',
@@ -13,7 +14,8 @@ let url = {
         google: 'https://www.google.com/complete/search?cp=2&client=psy-ab&hl=zh-CN',
         sanliu0: 'https://sug.so.360.cn/suggest?encodein=utf-8&encodeout=utf-8&format=json',
         doge: 'https://www.dogedoge.com/sugg/',
-        duck: 'https://duckduckgo.com/ac/?kl=wt-wt&_=1570767110286'
+        duck: 'https://duckduckgo.com/ac/?kl=wt-wt&_=1570767110286',
+        bing: 'https://api.bing.com/qsonhs.aspx?type=cb'
     }
 }
 
@@ -165,6 +167,14 @@ function eventListeners() {
                             str = str + `<li class="item">${array[i].phrase}</li>`;
                         }
                     }
+                }else if(indexValue ==='07'){
+                    // bing
+                    array = data.AS.Results[0].Suggests;
+                    if(array){
+                        for(let i=0; i<array.length; i++ ){
+                            str = str + `<li class="item">${array[i].Txt}</li>`;
+                        }
+                    }
                 }
                 $('.content-list').html(str);
             },
@@ -262,6 +272,9 @@ function ajaxDataType(searchEngineIndex) {
         case '06':
             // duck
             return 'json';
+        case '07':
+            // bing
+            return 'json';
         default:
             return 'json';
     }
@@ -293,6 +306,10 @@ function ajaxJsonp(searchEngineIndex) {
             return data;
         case '06':
             // duck
+            data.q = word;
+            return data;
+        case '07':
+            // bing
             data.q = word;
             return data;
         default:

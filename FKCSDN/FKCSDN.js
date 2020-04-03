@@ -167,12 +167,12 @@
         var searchArr = searchText.split(' ');
         var hasValue = false;
         for (var key in searchArr) {
-            if (searchArr[key] == '-csdn') {
+            if (searchArr[key] == '-site:csdn.net') {
                 hasValue = true;
             }
         }
         if (!hasValue && isChecked) {
-            searchInput.value = searchText + ' -csdn';
+            searchInput.value = searchText + ' -site:csdn.net';
         }
     })
     function FKCSDN(name, value, ele) {
@@ -182,9 +182,9 @@
            var searchText = searchInput.value;
            var searchArr = searchText.split(' ');
            var newArr = [];
-           if(searchArr.includes('-csdn')){
+           if(searchArr.includes('-site:csdn.net')){
                searchArr.forEach((value,index)=> {
-                   if(value !=='-csdn'){
+                   if(value !=='-site:csdn.net'){
                        newArr.push(value);
                    }
                })

@@ -227,6 +227,10 @@ function debounce(func, wait) {
 
 function jumpToPage() {
     $('.search-btn').on('click', function() {
+        // 修复百度搜索%自动转换问题
+        if(indexValue == '01' && word.indexOf('%')){
+           word =  word.replace(/%/g,'%25');
+        }
         window.open(normalUrl + word);
     })
     $('.content-list').on('click', '.item', function() {

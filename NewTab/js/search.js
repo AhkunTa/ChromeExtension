@@ -48,7 +48,7 @@ function eventListeners() {
             return
         }
         if (event.keyCode == 13) {
-            window.open(normalUrl + word)
+            junpPageUrl(word)
         } else if (event.keyCode == 40) {
             // 下
             event.preventDefault();
@@ -167,11 +167,11 @@ function eventListeners() {
                             str = str + `<li class="item">${array[i].phrase}</li>`;
                         }
                     }
-                }else if(indexValue ==='07'){
+                } else if (indexValue === '07') {
                     // bing
                     array = data.AS.Results[0].Suggests;
-                    if(array){
-                        for(let i=0; i<array.length; i++ ){
+                    if (array) {
+                        for (let i = 0; i < array.length; i++) {
                             str = str + `<li class="item">${array[i].Txt}</li>`;
                         }
                     }
@@ -185,7 +185,7 @@ function eventListeners() {
                 console.log(data, textStatus, errThrown);
             }
         });
-    },200))
+    }, 200))
 
 
     $('.content-list').on('mouseover', '.item', function() {
@@ -217,7 +217,8 @@ function eventListeners() {
 function debounce(func, wait) {
     let timeout = null
     return function() {
-        let _this = this, args = arguments;
+        let _this = this,
+            args = arguments;
         clearTimeout(timeout);
         timeout = setTimeout(function() {
             func.apply(_this, args);
@@ -227,19 +228,24 @@ function debounce(func, wait) {
 
 function jumpToPage() {
     $('.search-btn').on('click', function() {
-        // 修复百度搜索%自动转换问题
-        if(indexValue == '01' && word.indexOf('%') !== -1){
-           word =  word.replace(/%/g,'%25');
-        }
-        window.open(normalUrl + word);
+        junpPageUrl(word);
     })
     $('.content-list').on('click', '.item', function() {
-        window.open(normalUrl + $(this).text());
+        junpPageUrl($(this).text());
     })
-    $('#link').on('click', function(){
+    $('#link').on('click', function() {
         window.open(normalUrl);
     })
 
+}
+
+// 修复百度搜索%自动转换问题
+function junpPageUrl(keyword) {
+    let linkAddress = normalUrl + keyword;
+    if (indexValue == '01' && keyword.indexOf('%') !== -1) {
+        linkAddress = normalUrl + keyword.replace(/%/g, '%25');
+    }
+    window.open(linkAddress);
 }
 
 function addBgcolor(chooseItem) {

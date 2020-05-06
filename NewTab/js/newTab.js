@@ -71,11 +71,16 @@ function config() {
         settings.setShowChickenSoup = config.showChickenSoup;
         settings.setChickenSoup = config.chickenSoup;
 
-        if (!settings.setRandomBg && config.bgImg !== '') {
-            $('#background-image').attr({ 'src': config.bgImg })
-            $('#background-image').fadeIn();
+        if (!settings.setRandomBg) {
             $('.select-background').show();
             $('.select-background-url').hide();
+            if (config.bgImg !== '') {
+                $('#background-image').attr({ 'src': config.bgImg })
+                $('#background-image').fadeIn();
+            }else {
+                let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
+                $('#background').show().css({ 'background-color': radomColor, 'opacity': '1' })
+            }
         } else {
             $('.select-background-url').show();
             if (!settings.backgroundUrl) {
@@ -108,12 +113,12 @@ function config() {
             $('.select-time-format').hide();
         }
         if (!settings.setShowChickenSoup) {
-           $('.select-chicken-soup').hide();
+            $('.select-chicken-soup').hide();
         } else {
             $('.select-chicken-soup').show();
-            if(settings.setChickenSoup){
+            if (settings.setChickenSoup) {
                 $('.select-chicken-soup .check-title').text('来碗鸡汤')
-            }else {
+            } else {
                 $('.select-chicken-soup .check-title').text('来碗毒鸡汤')
             }
             updateChickenSoup(settings.setChickenSoup);
@@ -132,7 +137,7 @@ function config() {
 }
 
 function updateOneMsg() {
-    $('.poetry-whole').css({'max-width':`${document.documentElement.clientWidth-200}px`})
+    $('.poetry-whole').css({ 'max-width': `${document.documentElement.clientWidth-200}px` })
     $.ajax({
         type: 'get',
         url: oneUrl,
@@ -198,7 +203,7 @@ function updateChickenSoup(flag) {
             },
             error: function(data) {
                 let randomSoul = Math.ceil(soulArr.length * Math.random());
-                $('.chicken-soup-text').text(soulArr[randomSoul-1]);
+                $('.chicken-soup-text').text(soulArr[randomSoul - 1]);
                 $('.chicken-soup-from').text('');
                 $('.chicken-soup').fadeIn();
                 console.log(data.code || data.msg || '毒鸡汤出错了！')
@@ -272,10 +277,8 @@ function updateBg(url) {
 
         },
         error: function(data) {
-            $('#background').show();
-            $('#background').css({ 'opacity': '1' })
             let radomColor = `rgb(${Math.round(Math.random()*100)}, ${Math.round(Math.random()*100)} , ${Math.round(Math.random()*100)})`
-            $('#background').css({ 'background-color': radomColor, 'opacity': '1' })
+            $('#background').show().css({ 'background-color': radomColor, 'opacity': '1' })
             console.log(data.code || data.msg || '背景出错了！')
         }
     })
@@ -299,22 +302,22 @@ function backgroundLoaded(backgroundImageEle, isbackground, callback) {
     }, 200)
 }
 
-function updateWeather() {
-    $.ajax({
-        type: 'get',
-        url: weatherUrl,
-        data: {
-            appid: '91362169',
-            appsecret: '4BXeF7Nd',
-            version: 'v6'
-        },
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-        },
-        error: function(data) {}
-    })
-}
+// function updateWeather() {
+//     $.ajax({
+//         type: 'get',
+//         url: weatherUrl,
+//         data: {
+//             appid: '91362169',
+//             appsecret: '4BXeF7Nd',
+//             version: 'v6'
+//         },
+//         dataType: 'json',
+//         success: function(data) {
+//             console.log(data);
+//         },
+//         error: function(data) {}
+//     })
+// }
 
 // true 12小时
 // false 24小时
@@ -376,16 +379,17 @@ function chooseImage(fileDOM) {
         return;
     }
     reader.onload = function(event) {
-        $('#background-image').attr({ 'src': event.target.result })
-        chrome.storage.local.set({ bgImg: event.target.result }, function() {
-            console.log('backgroundImg保存成功！');
-        });
+        $('#background-image').attr({ 'src': event.target.result });
+        chromeStorageSet('bgImg',event.target.result);
+        settings.setBgImg = event.target.result;
     };
     reader.readAsDataURL(file);
 }
 
 $('.choose-image').on('change', function() {
     chooseImage($(this)[0]);
+    $('#background-image').attr({ 'src': settings.setBgImg })
+    $('#background-image').fadeIn();
 })
 
 $('.setting-btn').on('click', function(event) {
@@ -400,7 +404,7 @@ $('.app-contents,.setting-back').on('click', function() {
     }
 })
 
-$('input[type=checkbox]').on('change' ,function(){
+$('input[type=checkbox]').on('change', function() {
     let $check = $(this)
     let $checkName = $check.attr('name');
     let $checkVal = $check.prop('checked');
@@ -452,7 +456,7 @@ function updateRandomBg() {
     if ($('.select-background-url').find('input[type=checkbox]').is(':checked')) {
         $('.select-background-url .check-title').text('必应背景')
         backgroundUrl = bingUrl;
-    }else {
+    } else {
         $('.select-background-url .check-title').text('unsplash背景')
         backgroundUrl = unsplashUrl;
     }
@@ -469,8 +473,10 @@ function listenCheckChange(check, checkName, value) {
                 $('.select-background-url').show();
                 $('.select-background').hide();
             } else {
-                $('#background-image').attr({ 'src': settings.setBgImg })
-                $('#background-image').fadeIn();
+                if (settings.setBgImg !== '') {
+                    $('#background-image').attr({ 'src': settings.setBgImg })
+                    $('#background-image').fadeIn();
+                }
                 $('.select-background').show();
                 $('.select-background-url').hide();
             }
@@ -498,7 +504,7 @@ function listenCheckChange(check, checkName, value) {
                 updateTime(settings.setHours);
                 $('.clock-inner').fadeIn();
                 $('.select-time-format').show();
-            } else{
+            } else {
                 clearInterval(updateTimeInterval);
                 $('.clock-inner').fadeOut();
                 $('.select-time-format').hide();
@@ -528,10 +534,10 @@ function listenCheckChange(check, checkName, value) {
             chromeStorageSet('showChickenSoup', value);
             if (value) {
                 $('.select-chicken-soup').show();
-                if($('.select-chicken-soup').find('input[type=checkbox]').is(':checked')){
+                if ($('.select-chicken-soup').find('input[type=checkbox]').is(':checked')) {
                     $('.select-chicken-soup .check-title').text('来碗鸡汤')
                     updateChickenSoup(true);
-                }else {
+                } else {
                     $('.select-chicken-soup .check-title').text('来碗毒鸡汤')
                     updateChickenSoup(false);
                 }
@@ -543,9 +549,9 @@ function listenCheckChange(check, checkName, value) {
         case 'chickenSoup':
             chromeStorageSet('chickenSoup', value);
             updateChickenSoup(value);
-            if(value){
+            if (value) {
                 $('.select-chicken-soup .check-title').text('来碗鸡汤')
-            }else {
+            } else {
                 $('.select-chicken-soup .check-title').text('来碗毒鸡汤')
             }
             break;

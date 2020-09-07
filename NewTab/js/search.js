@@ -169,7 +169,7 @@ function eventListeners() {
                     }
                 } else if (indexValue === '07') {
                     // bing
-                    array = data.AS.Results[0].Suggests;
+                    array = data.AS.Results && data.AS.Results[0].Suggests;
                     if (array) {
                         for (let i = 0; i < array.length; i++) {
                             str = str + `<li class="item">${array[i].Txt}</li>`;

@@ -1,10 +1,17 @@
 // ==UserScript==
 // @name         FKCSDN
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      2.0
 // @description  try to take over the world!
 // @author       Bryce
 // @include      *://www.baidu.com/*
+// @include      *://www.dogedoge.com/*
+// @include      *://www.so.com/*
+// @include      *://www.sogou.com/*
+// @include      *://www.google.com/*
+// @include      *://www.duckduckgo.com/*
+// @include      *.bing.com/*
+
 // @grant        none
 // ==/UserScript==
 
@@ -32,6 +39,7 @@
         width: 100px;
         height: 100px;
         background-color: #f2f8ff;
+        z-index: 10000;
     }
 
     .btn {
@@ -125,26 +133,85 @@
      } else {
          styleDom.innerHTML = insertStyle;
      }
-    document.querySelector('#wrapper').appendChild(styleDom);
-    document.querySelector('#head').insertAdjacentHTML('beforeEnd', insertHtml);
+    document.querySelector('head').appendChild(styleDom);
+    document.querySelector('body').insertAdjacentHTML('beforeEnd', insertHtml);
 
+    var searchEngineCode = '00';
     var fixedBtn = document.querySelector('.fixed-btn');
     var inputBox = document.querySelector('input[type=checkbox]');
-    var searchBtn = document.querySelector('#su');
-    var isChecked = true;
+    var searchBtn = document;
+    var searchInput = document;
+
+    // 1 google 2 duck 3 baidu 4 sogo 5 360 6 doge 7 bing
+    switch(window.location.host) {
+        case 'www.google.com':
+            searchEngineCode = '01';
+            searchBtn = document.querySelector('.Tg7LZd');
+            searchInput = document.querySelector('.gLFyf');
+            break;
+        case 'duckduckgo.com':
+            searchEngineCode = '02';
+            searchBtn = document.querySelector('#search_button');
+            searchInput = document.querySelector('#search_form_input');
+            break;
+        case 'www.baidu.com':
+            searchEngineCode = '03';
+            searchBtn = document.querySelector('#su');
+            searchInput = document.querySelector('#kw');
+            break;
+        case 'www.sogou.com':
+            searchEngineCode = '04';
+            searchBtn = document.querySelector('#searchBtn');
+            searchInput = document.querySelector('#upquery');
+            break;
+        case 'www.so.com':
+            searchEngineCode = '05';
+            searchBtn = document.querySelector('#su');
+            searchInput = document.querySelector('#keyword');
+            break;
+        case 'www.dogedoge.com':
+            searchEngineCode = '06';
+            searchBtn = document.querySelector('#search_button');
+            searchInput = document.querySelector('#search_form_input');
+            break;
+        case 'cn.bing.com':
+            searchEngineCode = '07';
+            searchBtn = document.querySelector('#search_button');
+            searchInput = document.querySelector('#search_form_input');            
+            break;    
+        case 'www.bing.com':
+            searchEngineCode = '07';
+            searchBtn = document.querySelector('#su');
+            searchInput = document.querySelector('#keyword');          
+            break;            
+        default:
+           searchEngineCode = '00';
+           console.log('不支持此搜索引擎')
+           break;         
+    }
+    var isChecked = window.localStorage.getItem('FKCSDNCheck')  == 'false' ? false : true; 
+    inputBox.checked = isChecked;
+
+
+    var mouseDownClientX,mouseDownClientY,mouseDownOffsetLeft,mouseDownOffsetRight
     fixedBtn.addEventListener("mousedown", function(e) {
         move = true;
+        mouseDownClientX = e.clientX;
+        mouseDownClientY = e.clientY;
+        mouseDownOffsetLeft = fixedBtn.offsetLeft;
+        mouseDownOffsetRight = fixedBtn.offsetTop;
     });
-    fixedBtn.addEventListener("mousemove", function(e) {
+    document.addEventListener("mousemove", function(e) {
+        if (move == false) {
+            return;
+        }
         var x = e.clientX;
         var y = e.clientY;
-        if (move) {
-            fixedBtn.style.left = x - fixedBtn.clientWidth / 2 + "px";
-            fixedBtn.style.top = y - fixedBtn.clientHeight / 2 + "px";
-        }
+        fixedBtn.style.left = x - (mouseDownClientX - mouseDownOffsetLeft) + "px";
+        fixedBtn.style.top = y -(mouseDownClientY - mouseDownOffsetRight) + "px";
     });
 
-    document.addEventListener("mouseup", function(e) {
+    fixedBtn.addEventListener("mouseup", function(e) {
         move = false;
     });
     inputBox.addEventListener('change', function() {
@@ -161,8 +228,8 @@
                 break;
         }
     })
-    searchBtn.addEventListener('click', function() {
-        var searchInput = document.querySelector('#kw');
+    searchBtn.addEventListener('click', function(e) {
+        if(searchEngineCode == '00') return;
         var searchText = searchInput.value;
         var searchArr = searchText.split(' ');
         var hasValue = false;
@@ -176,9 +243,10 @@
         }
     })
     function FKCSDN(name, value, ele) {
-       isChecked = ele.checked;
-       if(!ele.checked){
-           var searchInput = document.querySelector('#kw');
+       if(searchEngineCode == '00') return;
+       isChecked = ele.checked == true ;
+       window.localStorage.setItem('FKCSDNCheck',isChecked)
+       if(!isChecked){
            var searchText = searchInput.value;
            var searchArr = searchText.split(' ');
            var newArr = [];
@@ -191,6 +259,7 @@
                searchInput.value = newArr.join(' ');
            }
        }
+       searchBtn.click();
     }
 
 })();

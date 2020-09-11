@@ -9,7 +9,7 @@
 // @include      *://www.so.com/*
 // @include      *://www.sogou.com/*
 // @include      *://www.google.com/*
-// @include      *://www.duckduckgo.com/*
+// @include      *://duckduckgo.com/*
 // @include      *.bing.com/*
 
 // @grant        none
@@ -30,7 +30,8 @@
         </div>
     </div>`
 
-    var insertStyle = `.fixed-btn {
+    var insertStyle = `<style type="text/css">
+       .fixed-btn {
        -webkit-user-select: none;
         position: fixed;
         top: 50px;
@@ -40,14 +41,6 @@
         height: 100px;
         background-color: #f2f8ff;
         z-index: 10000;
-    }
-
-    .btn {
-        /*background: #237bff;*/
-        position: absolute;
-        background-color: #237bff;
-        border-radius: 20px;
-        border: none;
     }
 
     .slider.round {
@@ -124,17 +117,11 @@
 
     .fk-box:first-child {
         margin-top: 20px;
-    }`
-
-     var styleDom = document.createElement('style');
-     styleDom.type='text/css';
-     if (styleDom.styleSheet) {
-         styleDom.styleSheet.cssText = insertStyle;
-     } else {
-         styleDom.innerHTML = insertStyle;
-     }
-    document.querySelector('head').appendChild(styleDom);
-    document.querySelector('body').insertAdjacentHTML('beforeEnd', insertHtml);
+    }
+    </style>
+    `
+    document.querySelector('body').insertAdjacentHTML('afterbegin', insertHtml);
+    document.querySelector('head').insertAdjacentHTML('afterbegin', insertStyle);
 
     var searchEngineCode = '00';
     var fixedBtn = document.querySelector('.fixed-btn');
@@ -143,7 +130,7 @@
     var searchInput = document;
 
     // 1 google 2 duck 3 baidu 4 sogo 5 360 6 doge 7 bing
-    switch(window.location.host) {
+    switch (window.location.host) {
         case 'www.google.com':
             searchEngineCode = '01';
             searchBtn = document.querySelector('.Tg7LZd');
@@ -158,6 +145,7 @@
             searchEngineCode = '03';
             searchBtn = document.querySelector('#su');
             searchInput = document.querySelector('#kw');
+            document.querySelector('#wrapper').insertAdjacentHTML('afterbegin', insertStyle);
             break;
         case 'www.sogou.com':
             searchEngineCode = '04';
@@ -176,24 +164,24 @@
             break;
         case 'cn.bing.com':
             searchEngineCode = '07';
-            searchBtn = document.querySelector('#search_button');
-            searchInput = document.querySelector('#search_form_input');            
-            break;    
+            searchBtn = document.querySelector('#sb_form_go');
+            searchInput = document.querySelector('#sb_form_q');
+            break;
         case 'www.bing.com':
             searchEngineCode = '07';
-            searchBtn = document.querySelector('#su');
-            searchInput = document.querySelector('#keyword');          
-            break;            
+            searchBtn = document.querySelector('#sb_form_go');
+            searchInput = document.querySelector('#sb_form_q');
+            break;
         default:
-           searchEngineCode = '00';
-           console.log('不支持此搜索引擎')
-           break;         
+            searchEngineCode = '00';
+            console.log('不支持此搜索引擎')
+            break;
     }
-    var isChecked = window.localStorage.getItem('FKCSDNCheck')  == 'false' ? false : true; 
+
+    var isChecked = window.localStorage.getItem('FKCSDNCheck') == 'false' ? false : true;
     inputBox.checked = isChecked;
 
-
-    var mouseDownClientX,mouseDownClientY,mouseDownOffsetLeft,mouseDownOffsetRight
+    var mouseDownClientX, mouseDownClientY, mouseDownOffsetLeft, mouseDownOffsetRight
     fixedBtn.addEventListener("mousedown", function(e) {
         move = true;
         mouseDownClientX = e.clientX;
@@ -208,7 +196,7 @@
         var x = e.clientX;
         var y = e.clientY;
         fixedBtn.style.left = x - (mouseDownClientX - mouseDownOffsetLeft) + "px";
-        fixedBtn.style.top = y -(mouseDownClientY - mouseDownOffsetRight) + "px";
+        fixedBtn.style.top = y - (mouseDownClientY - mouseDownOffsetRight) + "px";
     });
 
     fixedBtn.addEventListener("mouseup", function(e) {
@@ -228,8 +216,8 @@
                 break;
         }
     })
-    searchBtn.addEventListener('click', function(e) {
-        if(searchEngineCode == '00') return;
+    searchBtn && searchBtn.addEventListener('click', function(e) {
+        if (searchEngineCode == '00') return;
         var searchText = searchInput.value;
         var searchArr = searchText.split(' ');
         var hasValue = false;
@@ -242,24 +230,26 @@
             searchInput.value = searchText + ' -site:csdn.net';
         }
     })
+
     function FKCSDN(name, value, ele) {
-       if(searchEngineCode == '00') return;
-       isChecked = ele.checked == true ;
-       window.localStorage.setItem('FKCSDNCheck',isChecked)
-       if(!isChecked){
-           var searchText = searchInput.value;
-           var searchArr = searchText.split(' ');
-           var newArr = [];
-           if(searchArr.includes('-site:csdn.net')){
-               searchArr.forEach((value,index)=> {
-                   if(value !=='-site:csdn.net'){
-                       newArr.push(value);
-                   }
-               })
-               searchInput.value = newArr.join(' ');
-           }
-       }
-       searchBtn.click();
+        if (searchEngineCode == '00') return;
+        isChecked = ele.checked == true;
+        window.localStorage.setItem('FKCSDNCheck', isChecked)
+        if (!isChecked) {
+            var searchText = searchInput.value;
+            var searchArr = searchText.split(' ');
+            var newArr = [];
+            if (searchArr.includes('-site:csdn.net')) {
+                searchArr.forEach((value, index) => {
+                    if (value !== '-site:csdn.net') {
+                        newArr.push(value);
+                    }
+                })
+                searchInput.value = newArr.join(' ');
+            }
+        }
+        searchBtn.click();
+
     }
 
 })();

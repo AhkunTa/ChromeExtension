@@ -31,9 +31,9 @@ let settings = {
     oneMsgToken: '',
 }
 
-let updateTimeInterval, backgroundUrl = bingUrl;
+let updataTimeInterval, backgroundUrl = bingUrl;
 config()
-// updateWeather()
+// updataWeather()
 
 
 function config() {
@@ -87,11 +87,11 @@ function config() {
                 $('.select-background-url .check-title').text('unsplash背景')
                 backgroundUrl = unsplashUrl;
             }
-            updateBg(backgroundUrl);
+            updataBg(backgroundUrl);
         }
 
         if (settings.setOneMsg) {
-            updateOneMsg()
+            updataOneMsg()
             $('#refresh-poetry').show();
         } else {
             $('#refresh-poetry').hide();
@@ -105,7 +105,7 @@ function config() {
         }
 
         if (settings.setTime) {
-            updateTime(settings.setHours)
+            updataTime(settings.setHours)
             $('.select-time-format').show();
             $('.clock-inner').show();
         } else {
@@ -121,7 +121,7 @@ function config() {
             } else {
                 $('.select-chicken-soup .check-title').text('来碗毒鸡汤')
             }
-            updateChickenSoup(settings.setChickenSoup);
+            updataChickenSoup(settings.setChickenSoup);
         }
 
         items.find('[name=randomBg]').prop('checked', config.randomBg);
@@ -136,7 +136,7 @@ function config() {
     });
 }
 
-function updateOneMsg() {
+function updataOneMsg() {
     $('.poetry-whole').css({ 'max-width': `${document.documentElement.clientWidth-200}px` })
     $.ajax({
         type: 'get',
@@ -174,7 +174,7 @@ function updateOneMsg() {
     })
 }
 
-function updateChickenSoup(flag) {
+function updataChickenSoup(flag) {
     if (flag) {
         $.ajax({
             type: 'get',
@@ -212,7 +212,7 @@ function updateChickenSoup(flag) {
     }
 }
 
-function updateBg(url) {
+function updataBg(url) {
     $('#background').hide();
     $('#background').css({ 'opacity': '0' })
     $.ajax({
@@ -302,7 +302,7 @@ function backgroundLoaded(backgroundImageEle, isbackground, callback) {
     }, 200)
 }
 
-// function updateWeather() {
+// function updataWeather() {
 //     $.ajax({
 //         type: 'get',
 //         url: weatherUrl,
@@ -321,7 +321,7 @@ function backgroundLoaded(backgroundImageEle, isbackground, callback) {
 
 // true 12小时
 // false 24小时
-function updateTime(twelveHour) {
+function updataTime(twelveHour) {
     if (twelveHour === true) {
         $('#am-pm').show();
         $('.select-time-format .check-title').text('十二小时')
@@ -330,7 +330,7 @@ function updateTime(twelveHour) {
         $('#am-pm').hide();
     }
     getLangDate(twelveHour)
-    updateTimeInterval = setInterval(function() {
+    updataTimeInterval = setInterval(function() {
         getLangDate(twelveHour)
     }, 60000)
 }
@@ -431,15 +431,15 @@ $('.refresh').on('click', function() {
             } else {
                 backgroundUrl = unsplashUrl;
             }
-            updateBg(backgroundUrl);
+            updataBg(backgroundUrl);
             break;
         case 'oneMsg':
             if (checkValue) {
-                updateOneMsg();
+                updataOneMsg();
             }
             break;
         case 'chickenSoup':
-            updateChickenSoup(checkValue);
+            updataChickenSoup(checkValue);
             break;
     }
 })
@@ -452,7 +452,7 @@ function chromeStorageSet(key, value) {
     });
 }
 
-function updateRandomBg() {
+function updataRandomBg() {
     if ($('.select-background-url').find('input[type=checkbox]').is(':checked')) {
         $('.select-background-url .check-title').text('必应背景')
         backgroundUrl = bingUrl;
@@ -468,8 +468,8 @@ function listenCheckChange(check, checkName, value) {
         case 'randomBg':
             chromeStorageSet('randomBg', value)
             if (value) {
-                updateRandomBg()
-                updateBg(backgroundUrl);
+                updataRandomBg()
+                updataBg(backgroundUrl);
                 $('.select-background-url').show();
                 $('.select-background').hide();
             } else {
@@ -483,29 +483,29 @@ function listenCheckChange(check, checkName, value) {
             break;
         case 'backgroundUrl':
             chromeStorageSet('backgroundUrl', value)
-            updateRandomBg()
-            updateBg(backgroundUrl);
+            updataRandomBg()
+            updataBg(backgroundUrl);
             break
         case 'timeFormat':
             chromeStorageSet('timeFormat', value);
             if (value) {
                 // 24
                 // settings.setHours = true
-                updateTime(true)
+                updataTime(true)
             } else {
                 // 12
                 // settings.setHours = false
-                updateTime(false)
+                updataTime(false)
             }
             break;
         case 'time':
             chromeStorageSet('time', value);
             if (value) {
-                updateTime(settings.setHours);
+                updataTime(settings.setHours);
                 $('.clock-inner').fadeIn();
                 $('.select-time-format').show();
             } else {
-                clearInterval(updateTimeInterval);
+                clearInterval(updataTimeInterval);
                 $('.clock-inner').fadeOut();
                 $('.select-time-format').hide();
             }
@@ -524,7 +524,7 @@ function listenCheckChange(check, checkName, value) {
             chromeStorageSet('oneMsg', value);
             if (value) {
                 $('#refresh-poetry').fadeIn();
-                updateOneMsg()
+                updataOneMsg()
             } else {
                 $('#refresh-poetry').hide();
                 $('.poetry-content').fadeOut();
@@ -536,10 +536,10 @@ function listenCheckChange(check, checkName, value) {
                 $('.select-chicken-soup').show();
                 if ($('.select-chicken-soup').find('input[type=checkbox]').is(':checked')) {
                     $('.select-chicken-soup .check-title').text('来碗鸡汤')
-                    updateChickenSoup(true);
+                    updataChickenSoup(true);
                 } else {
                     $('.select-chicken-soup .check-title').text('来碗毒鸡汤')
-                    updateChickenSoup(false);
+                    updataChickenSoup(false);
                 }
             } else {
                 $('.select-chicken-soup').hide();
@@ -548,7 +548,7 @@ function listenCheckChange(check, checkName, value) {
             break;
         case 'chickenSoup':
             chromeStorageSet('chickenSoup', value);
-            updateChickenSoup(value);
+            updataChickenSoup(value);
             if (value) {
                 $('.select-chicken-soup .check-title').text('来碗鸡汤')
             } else {

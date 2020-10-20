@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FKCSDN
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  try to take over the world!
 // @author       Bryce
 // @include      *://www.baidu.com/*
@@ -20,7 +20,7 @@
     'use strict';
     var move = false
     var insertHtml = `
-     <div style="" class="fixed-btn">
+     <div style="" class="__fixed-btn">
         <div class="fk-box">
             <div class="fk-csdn">FK CSDN</div>
             <label class="fk-item">
@@ -31,11 +31,11 @@
     </div>`
 
     var insertStyle = `<style type="text/css">
-       .fixed-btn {
+       .__fixed-btn {
        -webkit-user-select: none;
         position: fixed;
-        top: 50px;
-        right: 50px;
+        top: 150px;
+        left: 0;
         border-radius: 50px;
         width: 100px;
         height: 100px;
@@ -124,7 +124,7 @@
     document.querySelector('head').insertAdjacentHTML('afterbegin', insertStyle);
 
     var searchEngineCode = '00';
-    var fixedBtn = document.querySelector('.fixed-btn');
+    var fixedBtn = document.querySelector('.__fixed-btn');
     var inputBox = document.querySelector('input[type=checkbox]');
     var searchBtn = document;
     var searchInput = document;
@@ -181,8 +181,11 @@
     var isChecked = window.localStorage.getItem('FKCSDNCheck') == 'false' ? false : true;
     inputBox.checked = isChecked;
 
-    var mouseDownClientX, mouseDownClientY, mouseDownOffsetLeft, mouseDownOffsetRight
+    var mouseDownClientX, mouseDownClientY, mouseDownOffsetLeft, mouseDownOffsetRight,mouseChangeClientX,mouseChangeClientY;
+    var windowWidth = window.innerWidth,
+        windowHeight = window.innerHeight
     fixedBtn.addEventListener("mousedown", function(e) {
+        fixedBtn.style.transition  = '';
         move = true;
         mouseDownClientX = e.clientX;
         mouseDownClientY = e.clientY;
@@ -201,6 +204,19 @@
 
     fixedBtn.addEventListener("mouseup", function(e) {
         move = false;
+        mouseChangeClientX = e.clientX;
+        mouseChangeClientY = e.clientY;
+        fixedBtn.style.transition = 'all .3s';
+        if(mouseChangeClientX < windowWidth/2){
+            fixedBtn.style.left = 0;
+        }else {
+            fixedBtn.style.left = windowWidth - fixedBtn.clientWidth + 'px';
+        }
+        if(fixedBtn.offsetTop < 0){
+            fixedBtn.style.top = 0;
+        }else if(fixedBtn.offsetTop + fixedBtn.clientHeight > windowHeight) {
+            fixedBtn.style.top = windowHeight- fixedBtn.clientHeight  + 'px';
+        }
     });
     inputBox.addEventListener('change', function() {
         var name = this.getAttribute('name');

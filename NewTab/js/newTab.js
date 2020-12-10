@@ -488,6 +488,7 @@ function listenCheckChange(check, checkName, value) {
             break
         case 'timeFormat':
             chromeStorageSet('timeFormat', value);
+            clearInterval(updataTimeInterval);
             if (value) {
                 // 24
                 // settings.setHours = true
